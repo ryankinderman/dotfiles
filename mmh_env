@@ -1,0 +1,26 @@
+#!/bin/sh
+#declare -a mmh_exports
+#function export_var {
+#  local 
+#}
+# MMH environment settings
+function load_mmh_env {
+  export SEARS_ROOT=$SOURCECODE/sears
+  export MMH_ROOT=$SEARS_ROOT/mmh
+  export MMH_HOME=$MMH_ROOT/mmh
+  export JRUBY_HOME=$SEARS_ROOT/vendor/jruby
+  export PATH=$MMH_ROOT/tools/maven-2.2.1/bin:$PATH:$JRUBY_HOME/bin
+  export JBOSS_HOME=$MMH_ROOT/tools/jboss-4.0.5.GA 
+  export app_lifecycle=dev 
+  export CATALINA_HOME=$MMH_ROOT/tools/apache-tomcat-5.5.20/ 
+  export JAVA_OPTS="-d32 -Djava.awt.headless=true -Djruby.compile.mode=OFF -Djruby.launch.inproc=false"
+  export MAVEN_OPTS="-Xmx1024m"
+
+  alias cm="cd $MMH_HOME"
+  alias cr="cd $MMH_HOME/mmh-web-mvn/src/main/webapp/rails"
+  alias cj="cd $JBOSS_HOME"
+  alias mysqlstart.mmh="sudo mysqld_safe --defaults-file=$DOTFILES/my.cnf.mmh 2>&1 > /dev/null &"
+}
+#function unload_mmh_env {
+
+
