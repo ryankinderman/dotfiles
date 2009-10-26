@@ -97,22 +97,11 @@ cnoremap <C-b> <Left>
 
 " Markdown ******************************************************************
 function! PreviewMKD()
-ruby << EOF
-  require 'rubygems'
-  require 'bluecloth'
-  t = ""
-  VIM::Buffer.current.count.times {|i| t += "#{VIM::Buffer.current[i + 1]}\n"}
-  html_file = VIM::Buffer.current.name.gsub(/.(md|mkd)$/, '.html')
-  if html_file == VIM::Buffer.current.name
-    print "Error! - This file extension is not supported for Markdown previews"
-  end
-  File.open(html_file, 'w') do |f|
-    f.write(BlueCloth.new(t).to_html)
-  end
-  system("open #{html_file}")
-EOF
+  let tmpfile = tempname()
+  exe "write! " tmpfile
+  exe "!preview_mkd " tmpfile
 endfunction
-map <Leader>p :call PreviewMKD()<CR>
+autocmd BufRead *.markdown map <Leader>p :call PreviewMKD()<CR>
 
 " Sessions ********************************************************************
 set sessionoptions=blank,buffers,curdir,folds,help,options,tabpages,winpos,winsize
