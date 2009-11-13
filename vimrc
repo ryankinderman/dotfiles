@@ -1,4 +1,12 @@
-set runtimepath^=$DOTFILES/vim
+" Add all directories under $DOTFILES/vim/vendor as runtime paths, so plugins,
+" docs, colors, and other runtime files are loaded.
+let vendorpaths = globpath("$DOTFILES/vim", "vendor/*")
+let vendorruntimepaths = substitute(vendorpaths, "\n", ",", "g")
+let vendorpathslist = split(vendorpaths, "\n")
+execute "set runtimepath^=$DOTFILES/vim,".vendorruntimepaths
+for vendorpath in vendorpathslist
+  execute "helptags ".vendorpath."/doc"
+endfor
 
 " Use Vim settings, rather then Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
@@ -78,8 +86,8 @@ endif " has("autocmd")
 " Easily open and reload vimrc
 ",v brings up my .vimrc
 ",V reloads it -- making all changes active (have to save first)
-map ,v :sp ~/.vimrc<CR>
-map <silent> ,V :source ~/.vimrc<CR>:filetype detect<CR>:exe ":echo 'vimrc reloaded'"<CR>
+map ,v :sp $DOTFILES/vimrc<CR>
+map <silent> ,V :source $HOME/.vimrc<CR>:filetype detect<CR>:exe ":echo 'vimrc reloaded'"<CR>
 
 " Key sequence mappings
 cmap %/ <C-r>=expand('%:p:h')<CR>/
@@ -95,14 +103,6 @@ cnoremap <C-b> <Left>
 "cnoremap <Esc>b <S-Left>
 "cnoremap <Esc>f <S-Right>
 
-" Markdown ******************************************************************
-function! PreviewMKD()
-  let tmpfile = tempname()
-  exe "write! " tmpfile
-  exe "!preview_mkd " tmpfile
-endfunction
-autocmd BufRead *.markdown map <Leader>p :call PreviewMKD()<CR>
-
 " Sessions ********************************************************************
 set sessionoptions=blank,buffers,curdir,folds,help,options,tabpages,winpos,winsize
 
@@ -115,6 +115,17 @@ function! WordWrap(state)
   end
 endfunction
 com! WW call WordWrap("on")
+
+" Markdown ******************************************************************
+function! PreviewMKD()
+  let tmpfile = tempname()
+  exe "write! " tmpfile
+  exe "!preview_mkd " tmpfile
+endfunction
+autocmd BufRead *.markdown map <Leader>p :call PreviewMKD()<CR>
+autocmd BufRead *.markdown call WordWrap("on")
+autocmd BufRead *.markdown set spell
+
 
 " Folding *********************************************************************
 function! EnableFolding()
