@@ -5,7 +5,10 @@ let vendorruntimepaths = substitute(vendorpaths, "\n", ",", "g")
 let vendorpathslist = split(vendorpaths, "\n")
 execute "set runtimepath^=$DOTFILES/vim,".vendorruntimepaths
 for vendorpath in vendorpathslist
-  execute "helptags ".vendorpath."/doc"
+  if isdirectory(vendorpath."/doc")
+    echo "yay!"
+    execute "helptags ".vendorpath."/doc"
+  endif
 endfor
 
 " Use Vim settings, rather then Vi settings (much better!).
