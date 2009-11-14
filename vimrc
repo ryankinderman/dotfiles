@@ -106,7 +106,7 @@ cnoremap <C-b> <Left>
 "cnoremap <Esc>f <S-Right>
 
 " Sessions ********************************************************************
-set sessionoptions=blank,buffers,curdir,folds,help,options,tabpages,winpos,winsize
+set sessionoptions=blank,buffers,curdir,folds,help,options,resize,tabpages,winpos,winsize
 
 " Text formatting
 function! WordWrap(state)
