@@ -14,6 +14,10 @@ export MANPATH=/opt/local/man:$MANPATH
 export EDITOR=/usr/bin/vim
 export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home
 
+if [ -f /opt/local/etc/bash_completion ]; then
+    . /opt/local/etc/bash_completion
+fi
+
 alias ls='ls -G'
 alias reload="source $HOME/.bash_profile"
 alias e='exit'
