@@ -14,8 +14,30 @@ function load_mmh_env {
   export JBOSS_HOME=$MMH_ROOT/tools/jboss-4.0.5.GA 
   export app_lifecycle=dev 
   export CATALINA_HOME=$MMH_ROOT/tools/apache-tomcat-5.5.20/ 
-  export JAVA_OPTS="-d32 -Djava.awt.headless=true -Djruby.compile.mode=OFF -Djruby.launch.inproc=false"
-  export MAVEN_OPTS="-Xmx1024m"
+  export SSO_DEV_MODE=true
+
+  platform=$(uname)
+  if [ "$platform" == "Darwin" ]; then
+    export MAVEN_OPTS="-Xmx1024m"
+    os_version=`sw_vers | sed -n '/^ProductVersion:/ { s/^.*\:\s\([0-9]\+\.[0-9]\+\).*$/\1/; p }'`
+    if [ "$os_version" == "10.6" ]; then # snow leopard
+      MMH_RAILS_BUILD_JAVA_MEM=-Xmx768m
+      MMH_RAILS_BUILD_JAVA_OPTS="-d32 -XX:MaxPermSize=768m"
+    elif [ "$os_version" == "10.5" ]; then # leopard
+      MMH_RAILS_BUILD_JAVA_MEM=-Xmx2048m
+      MMH_RAILS_BUILD_JAVA_OPTS="-XX:MaxPermSize=2048m"
+    else
+      echo "Error: Unsupported OS version - $os_version"
+      exit 1
+    fi
+    export MMH_RAILS_BUILD_JAVA_MEM
+    export MMH_RAILS_BUILD_JAVA_OPTS="-Djava.awt.headless=true -Djruby.compile.mode=OFF -Djruby.launch.inproc=false $MMH_RAILS_BUILD_JAVA_OPTS"
+    alias jrake="JAVA_MEM=\"$MMH_RAILS_BUILD_JAVA_MEM\" JAVA_OPTS=\"$MMH_RAILS_BUILD_JAVA_OPTS\" jruby -S rake"
+    alias jspec="JAVA_MEM=\"$MMH_RAILS_BUILD_JAVA_MEM\" JAVA_OPTS=\"$MMH_RAILS_BUILD_JAVA_OPTS\" jruby script/spec"
+  else
+    echo "Error: Unsupported platform - $platform (maybe you should add support for it?)"
+    exit 1
+  fi
 
   alias cm="cd $MMH_HOME"
   alias cr="cd $MMH_HOME_RAILS"
