@@ -118,6 +118,10 @@ function! WordWrap(state)
 endfunction
 com! WW call WordWrap("on")
 
+" White space
+au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
+au InsertLeave * match ExtraWhitespace /\s\+$/
+
 " Markdown ******************************************************************
 function! PreviewMKD()
   let tmpfile = tempname()
