@@ -29,9 +29,9 @@ set showcmd		    " display incomplete commands
 set incsearch		  " do incremental searching
 set vb            " turn on visual bell
 set nu            " show line numbers
-set sw=2          " set shiftwidth to 2  
+set sw=2          " set shiftwidth to 2
 set ts=2          " set number of spaces for a tab to 2
-set et            " expand tabs to spaces 
+set et            " expand tabs to spaces
 
 " For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
 " let &guioptions = substitute(&guioptions, "t", "", "g")
@@ -120,7 +120,7 @@ com! WW call WordWrap("on")
 
 " White space
 au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-au InsertLeave * match ExtraWhitespace /\s\+$/
+au BufRead,InsertLeave * match ExtraWhitespace /\s\+$/
 
 " Markdown ******************************************************************
 function! PreviewMKD()
