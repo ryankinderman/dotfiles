@@ -211,6 +211,3 @@ hi  link csXmlTag             Keyword
 
 
 " Special for PHP
-
-" Extra White space
-hi ExtraWhitespace ctermbg=red guibg=red 
