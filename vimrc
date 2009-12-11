@@ -119,7 +119,9 @@ endfunction
 com! WW call WordWrap("on")
 
 " White space
-hi ExtraWhitespace ctermbg=red guibg=red
+let hiExtraWhiteSpace = "hi ExtraWhitespace ctermbg=red guibg=red"
+exec hiExtraWhiteSpace
+au ColorScheme * exec hiExtraWhiteSpace
 au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 au BufRead,InsertLeave * match ExtraWhitespace /\s\+$/
 

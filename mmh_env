@@ -14,7 +14,6 @@ function load_mmh_env {
   export JBOSS_HOME=$MMH_ROOT/tools/jboss-4.0.5.GA 
   export app_lifecycle=dev 
   export CATALINA_HOME=$MMH_ROOT/tools/apache-tomcat-5.5.20/ 
-  export SSO_DEV_MODE=true
 
   platform=$(uname)
   if [ "$platform" == "Darwin" ]; then
