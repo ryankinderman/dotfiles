@@ -41,6 +41,7 @@ function load_mmh_env {
   alias cm="cd $MMH_HOME"
   alias cr="cd $MMH_HOME_RAILS"
   alias cj="cd $JBOSS_HOME"
+  alias db_recreate="mysqladmin -uroot -pp@ssw0rd drop -f mmh && mysqladmin -uroot -pp@ssw0rd create mmh && echo 'Database \"mmh\" created' && jrake db:migrate"
   alias mysqlstart.mmh="sudo mysqld_safe --defaults-file=$DOTFILES/my.cnf.mmh 2>&1 > /dev/null &"
 }
 #function unload_mmh_env {
