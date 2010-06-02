@@ -9,11 +9,12 @@ function load_mmh_env {
   export MMH_ROOT=$SEARS_ROOT/mmh
   export MMH_HOME=$MMH_ROOT/mmh
   export MMH_HOME_RAILS=$MMH_HOME/mmh-web-mvn/src/main/webapp/rails
-  export JRUBY_HOME=$SEARS_ROOT/vendor/jruby
-  export PATH=$MMH_ROOT/tools/maven-2.2.1/bin:$PATH:$JRUBY_HOME/bin
+  export PATH=$MMH_ROOT/tools/maven-2.2.1/bin:$PATH
   export JBOSS_HOME=$MMH_ROOT/tools/jboss-eap-4.3/jboss-as
   export app_lifecycle=dev 
   export CATALINA_HOME=$MMH_ROOT/tools/apache-tomcat-5.5.20/ 
+
+  rvm use jruby-1.4.1
 
   platform=$(uname)
   if [ "$platform" == "Darwin" ]; then
