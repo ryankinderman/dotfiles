@@ -163,6 +163,20 @@ if has("gui_running")
 else
   set bg=dark
 end
+function! GetColorSchemes()
+  let colorschemes = {}
+
+  for rtpath in split(&runtimepath, ",")
+    let colorscheme_files = split(glob(rtpath . "/colors/*.vim"), "\n")
+    for colorscheme_file in colorscheme_files
+      let colorname = substitute(colorscheme_file, "^.*/\\([^/]\\+\\)\\.vim$", "\\1", "")
+      let colorschemes[colorname] = colorscheme_file
+    endfor
+  endfor
+
+  return colorschemes
+endfunction
+
 
 " Projects *******************************************************************
 function! ConfigureForMMH()
