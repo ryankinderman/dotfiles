@@ -176,6 +176,12 @@ function! GetColorSchemes()
 
   return colorschemes
 endfunction
+function! FListColorSchemes()
+  new
+  let colorschemes = GetColorSchemes()
+  call append(0, keys(colorschemes))
+endfunction
+command! ListColorSchemes call FListColorSchemes()
 
 
 " Projects *******************************************************************
