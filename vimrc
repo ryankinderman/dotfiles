@@ -90,7 +90,7 @@ endif " has("autocmd")
 ",v brings up my .vimrc
 ",V reloads it -- making all changes active (have to save first)
 map ,v :sp $DOTFILES/vimrc<CR>
-map <silent> ,V :source $HOME/.vimrc<CR>:filetype detect<CR>:exe ":echo 'vimrc reloaded'"<CR>
+map <silent> ,V :source $HOME/.vimrc<CR>:if has("gui")<CR>:source $HOME/.gvimrc<CR>:endif<CR>:filetype detect<CR>:exe ":echo 'vimrc reloaded'"<CR>
 
 " Key sequence mappings
 cmap %/ <C-r>=expand('%:p:h')<CR>/

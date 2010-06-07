@@ -31,7 +31,7 @@ if has("gui")
   set guioptions-=T
   set guitablabel=%N\ %h%r%m%t
   set guitabtooltip=%F
-end	
+end
 
 set ch=2		" Make command line two lines high
 
