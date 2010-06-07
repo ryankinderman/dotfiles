@@ -178,8 +178,11 @@ function! GetColorSchemes()
 endfunction
 function! FListColorSchemes()
   new
-  let colorschemes = GetColorSchemes()
-  call append(0, keys(colorschemes))
+  call append(0, keys(GetColorSchemes()))
+  delete
+  0
+  setlocal nomodified nomodifiable bufhidden=delete nonumber nowrap foldcolumn=0 nofoldenable
+  nnoremap <buffer> <silent> <CR> :<C-U>exe "colorscheme ".getline('.')<CR>
 endfunction
 command! ListColorSchemes call FListColorSchemes()
 
