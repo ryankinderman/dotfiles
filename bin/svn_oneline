@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# Transforms each revision from the stdout of 'svn log' to one line.
+#
+sed -n '/^-/,/^-/ { /^-/ n;p;n;n; /^-/ ! p }' | sed -n '/^r[[:digit:]]/ { s/\(.*\)/\1 ;;;/;x;s/\n/ /;p; }; /^r[[:digit:]]/ ! H' | sed -n '2,$p' | awk '{
+    svnline=$0
+    split(svnline,lm,/ ;;; /)
+    split(svnline,svnparts,/ \| /)
+    sub(/ \(.*\)/,"",svnparts[3])
+    command=("date -j -f \"%Y-%m-%d %H:%M:%S %z\" \"" svnparts[3] "\" \"+%m/%d@%H:%M\"")
+    (command|getline)
+    close(command)
+    printf "%s %s %-8s %s\n", $0, svnparts[1], svnparts[2], lm[2]
+  }'
