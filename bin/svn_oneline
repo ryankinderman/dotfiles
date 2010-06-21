@@ -2,7 +2,7 @@
 #
 # Transforms each revision from the stdout of 'svn log' to one line.
 #
-sed -n '/^-/,/^-/ { /^-/ n;p;n;n; /^-/ ! p }' | sed -n '/^r[[:digit:]]/ { s/\(.*\)/\1 ;;;/;x;s/\n/ /;p; }; /^r[[:digit:]]/ ! H' | sed -n '2,$p' | awk '{
+sed -n '/^-/,/^-/ { /^-/ n;p;n;n; /^-/ ! p }' | sed -n '/^r[[:digit:]]/ { s/\(.*\)/\1 ;;;/;x;s/\n/ /g;p; }; /^r[[:digit:]]/ ! H' | sed -n '2,$p' | awk '{
     svnline=$0
     split(svnline,lm,/ ;;; /)
     split(svnline,svnparts,/ \| /)
