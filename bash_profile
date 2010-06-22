@@ -20,9 +20,9 @@ fi
 if [[ -s "$HOME/.rvm/scripts/rvm" ]]  ; then source "$HOME/.rvm/scripts/rvm" ; fi
 
 platform='unknown'
-if [[ "$OSTYPE" =~ 'linux' ]]; then
+if [[ "${OSTYPE:0:5}" == 'linux' ]]; then
   platform='linux'
-elif [[ "$OSTYPE" =~ 'darwin' ]]; then
+elif [[ "${OSTYPE:0:6}" == 'darwin' ]]; then
   platform='darwin'
 fi
 
