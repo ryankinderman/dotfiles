@@ -19,7 +19,18 @@ if [ -f /opt/local/etc/bash_completion ]; then
 fi
 if [[ -s "$HOME/.rvm/scripts/rvm" ]]  ; then source "$HOME/.rvm/scripts/rvm" ; fi
 
-alias ls='ls -G'
+platform='unknown'
+if [[ "$OSTYPE" =~ 'linux' ]]; then
+  platform='linux'
+elif [[ "$OSTYPE" =~ 'darwin' ]]; then
+  platform='darwin'
+fi
+
+if [[ "$platform" == "darwin" ]]; then
+  alias ls='ls -G'
+else
+  alias ls='ls --color'
+fi
 alias reload="source $HOME/.bash_profile"
 alias e='exit'
 alias mysqlstart.rails="sudo mysqld_safe --defaults-file=$DOTFILES/my.cnf.rails 2>&1 > /dev/null &"
