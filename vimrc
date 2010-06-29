@@ -136,9 +136,6 @@ autocmd BufRead *.markdown map <Leader>p :call PreviewMKD()<CR>
 autocmd BufRead *.markdown call WordWrap("on")
 autocmd BufRead *.markdown set spell
 
-" Filetypes
-au BufRead,BufNewFile *.feature setfiletype cucumber
-
 " Folding *********************************************************************
 function! EnableFolding()
   set foldcolumn=2
