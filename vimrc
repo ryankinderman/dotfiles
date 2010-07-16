@@ -214,7 +214,7 @@ function! AutosaveSessionOff()
 
   echo "Auto-saving sessions is off"
 endfunction
-command! -complete=dir -nargs=1 AutosaveSessionOn call AutosaveSessionOn(<args>)
+command! -complete=file -nargs=1 AutosaveSessionOn call AutosaveSessionOn(<f-args>)
 command! AutosaveSessionOff call AutosaveSessionOff()
 augroup AutosaveSession
   au!
