@@ -118,6 +118,7 @@ function! WordWrap(state)
   end
 endfunction
 com! WW call WordWrap("on")
+com! Ww call WordWrap("off")
 
 " White space
 let hiExtraWhiteSpace = "hi ExtraWhitespace ctermbg=red guibg=red"
@@ -192,16 +193,32 @@ function! ConfigureForMMH()
 endfunction
 com! Mmh call ConfigureForMMH()
 
-function! AutosaveSession(session_file_path)
+function! AutosaveSessionOn(session_file_path)
   augroup AutosaveSession
     au!
     exec "au VimLeave * mks! " . a:session_file_path
   augroup end
   let g:AutosaveSessionFilePath = a:session_file_path
+
+  echo "Auto-saving sessions to \"" . a:session_file_path . "\""
 endfunction
+function! AutosaveSessionOff()
+  if exists("g:AutosaveSessionFilePath")
+    unlet g:AutosaveSessionFilePath
+  endif
+
+  augroup AutosaveSession
+    au!
+  augroup end
+  augroup! AutosaveSession
+
+  echo "Auto-saving sessions is off"
+endfunction
+command! -complete=dir -nargs=1 AutosaveSessionOn call AutosaveSessionOn(<args>)
+command! AutosaveSessionOff call AutosaveSessionOff()
 augroup AutosaveSession
   au!
-  au SessionLoadPost * if exists("g:AutosaveSessionFilePath") != 0|call AutosaveSession(g:AutosaveSessionFilePath)|endif
+  au SessionLoadPost * if exists("g:AutosaveSessionFilePath") != 0|call AutosaveSessionOn(g:AutosaveSessionFilePath)|endif
 augroup end
 
 " Java ***********************************************************************
