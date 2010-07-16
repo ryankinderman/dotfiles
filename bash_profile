@@ -18,6 +18,7 @@ if [ -f /opt/local/etc/bash_completion ]; then
     . /opt/local/etc/bash_completion
 fi
 if [[ -s "$HOME/.rvm/scripts/rvm" ]]  ; then source "$HOME/.rvm/scripts/rvm" ; fi
+rvm default
 
 platform='unknown'
 if [[ "${OSTYPE:0:5}" == 'linux' ]]; then
