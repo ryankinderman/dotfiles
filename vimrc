@@ -109,7 +109,36 @@ cnoremap <Esc>f <S-Right>
 " Sessions ********************************************************************
 set sessionoptions=blank,buffers,curdir,folds,help,options,resize,tabpages,winpos,winsize,globals
 
-" Text formatting
+function! AutosaveSessionOn(session_file_path)
+  augroup AutosaveSession
+    au!
+    exec "au VimLeave * mks! " . a:session_file_path
+  augroup end
+  let g:AutosaveSessionFilePath = a:session_file_path
+
+  echo "Auto-saving sessions to \"" . a:session_file_path . "\""
+endfunction
+function! AutosaveSessionOff()
+  if exists("g:AutosaveSessionFilePath")
+    unlet g:AutosaveSessionFilePath
+  endif
+
+  augroup AutosaveSession
+    au!
+  augroup end
+  augroup! AutosaveSession
+
+  echo "Auto-saving sessions is off"
+endfunction
+command! -complete=file -nargs=1 AutosaveSessionOn call AutosaveSessionOn(<f-args>)
+command! AutosaveSessionOff call AutosaveSessionOff()
+augroup AutosaveSession
+  au!
+  au SessionLoadPost * if exists("g:AutosaveSessionFilePath") != 0|call AutosaveSessionOn(g:AutosaveSessionFilePath)|endif
+augroup end
+
+
+" Text formatting ********************************************************************
 function! WordWrap(state)
   if a:state == "on"
     set lbr
@@ -120,14 +149,14 @@ endfunction
 com! WW call WordWrap("on")
 com! Ww call WordWrap("off")
 
-" White space
+" White space ****************************************************************
 let hiExtraWhiteSpace = "hi ExtraWhitespace ctermbg=red guibg=red"
 exec hiExtraWhiteSpace
 au ColorScheme * exec hiExtraWhiteSpace
 au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 au BufRead,InsertLeave * match ExtraWhitespace /\s\+$/
 
-" Markdown ******************************************************************
+" Markdown *******************************************************************
 function! PreviewMKD()
   let tmpfile = tempname()
   exe "write! " tmpfile
@@ -192,33 +221,5 @@ function! ConfigureForMMH()
   set tags=./tags,$MMH_HOME/tags,$MMH_ROOT/stable/tags,$MMH_ROOT/indexer/tags,$MMH_ROOT/jdk_tags,$HOME/tags,tags
 endfunction
 com! Mmh call ConfigureForMMH()
-
-function! AutosaveSessionOn(session_file_path)
-  augroup AutosaveSession
-    au!
-    exec "au VimLeave * mks! " . a:session_file_path
-  augroup end
-  let g:AutosaveSessionFilePath = a:session_file_path
-
-  echo "Auto-saving sessions to \"" . a:session_file_path . "\""
-endfunction
-function! AutosaveSessionOff()
-  if exists("g:AutosaveSessionFilePath")
-    unlet g:AutosaveSessionFilePath
-  endif
-
-  augroup AutosaveSession
-    au!
-  augroup end
-  augroup! AutosaveSession
-
-  echo "Auto-saving sessions is off"
-endfunction
-command! -complete=file -nargs=1 AutosaveSessionOn call AutosaveSessionOn(<f-args>)
-command! AutosaveSessionOff call AutosaveSessionOff()
-augroup AutosaveSession
-  au!
-  au SessionLoadPost * if exists("g:AutosaveSessionFilePath") != 0|call AutosaveSessionOn(g:AutosaveSessionFilePath)|endif
-augroup end
 
 " Java ***********************************************************************
