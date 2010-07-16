@@ -107,7 +107,7 @@ cnoremap <Esc>b <S-Left>
 cnoremap <Esc>f <S-Right>
 
 " Sessions ********************************************************************
-set sessionoptions=blank,buffers,curdir,folds,help,options,resize,tabpages,winpos,winsize
+set sessionoptions=blank,buffers,curdir,folds,help,options,resize,tabpages,winpos,winsize,globals
 
 " Text formatting
 function! WordWrap(state)
@@ -191,5 +191,17 @@ function! ConfigureForMMH()
   set tags=./tags,$MMH_HOME/tags,$MMH_ROOT/stable/tags,$MMH_ROOT/indexer/tags,$MMH_ROOT/jdk_tags,$HOME/tags,tags
 endfunction
 com! Mmh call ConfigureForMMH()
+
+function! AutosaveSession(session_file_path)
+  augroup AutosaveSession
+    au!
+    exec "au VimLeave * mks! " . a:session_file_path
+  augroup end
+  let g:AutosaveSessionFilePath = a:session_file_path
+endfunction
+augroup AutosaveSession
+  au!
+  au SessionLoadPost * if exists("g:AutosaveSessionFilePath") != 0|call AutosaveSession(g:AutosaveSessionFilePath)|endif
+augroup end
 
 " Java ***********************************************************************
