@@ -1,9 +1,11 @@
 " Add all directories under $DOTFILES/vim/vendor as runtime paths, so plugins,
 " docs, colors, and other runtime files are loaded.
 let vendorpaths = globpath("$DOTFILES/vim", "vendor/*")
+
 let vendorruntimepaths = substitute(vendorpaths, "\n", ",", "g")
-let vendorpathslist = split(vendorpaths, "\n")
 execute "set runtimepath^=$DOTFILES/vim,".vendorruntimepaths
+
+let vendorpathslist = split(vendorpaths, "\n")
 for vendorpath in vendorpathslist
   if isdirectory(vendorpath."/doc")
     execute "helptags ".vendorpath."/doc"
