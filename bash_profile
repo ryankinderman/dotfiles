@@ -36,5 +36,3 @@ alias reload="source $HOME/.bash_profile"
 alias e='exit'
 alias mysqlstart.rails="sudo mysqld_safe --defaults-file=$DOTFILES/my.cnf.rails 2>&1 > /dev/null &"
 alias mysqlstop="sudo killall mysqld"
-
-source $DOTFILES/mmh_env
