@@ -1,0 +1,2 @@
+--type-set=cucumber_feature=.feature
+--type-set=haml=.haml
