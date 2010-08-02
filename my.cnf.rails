@@ -51,6 +51,22 @@ query_cache_size = 16M
 #skip-networking
 server-id	= 1
 
+##############################################
+# Ryan: Modifications for speedy development
+##############################################
+query_cache_type = 1 # keeps it from executing duplicate queries
+
+# give as much as you can to the buffer pool
+innodb_buffer_pool_size = 1000M
+innodb_additional_mem_pool_size = 200M
+
+# helps speed up for lots of short write transactions
+# only use when you can stand to lose the last couple seconds
+# in the case of an OS crash
+innodb_flush_log_at_trx_commit=2
+innodb_thread_concurrency=8
+
+
 # Uncomment the following if you want to log updates
 #log-bin=mysql-bin
 
