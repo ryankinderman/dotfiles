@@ -20,8 +20,10 @@ fi
 
 if [[ -s "$DOTFILES/bash/git-completion.bash" ]] ; then source "$DOTFILES/bash/git-completion.bash" ; fi
 
-if [[ -s "$HOME/.rvm/scripts/rvm" ]]  ; then source "$HOME/.rvm/scripts/rvm" ; fi
-rvm default
+if [[ -s "$HOME/.rvm/scripts/rvm" ]] ; then
+  source "$HOME/.rvm/scripts/rvm"
+  rvm default
+fi
 
 platform='unknown'
 if [[ "${OSTYPE:0:5}" == 'linux' ]]; then
