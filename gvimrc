@@ -13,13 +13,11 @@ if has("gui_macvim")
   set transp=8
 end
 
-if has("gui")
-  set lines=50
-  set columns=120
-  set guioptions-=T
-  set guitablabel=%N\ %h%r%m%t
-  set guitabtooltip=%F
-end
+set lines=50
+set columns=120
+set guioptions-=T
+set guitablabel=%N\ %h%r%m%t
+set guitabtooltip=%F
 
 set ch=2		" Make command line two lines high
 
