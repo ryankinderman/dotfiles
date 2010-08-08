@@ -188,8 +188,8 @@ let g:netrw_list_hide='^\..*\.swp$'
 " Colors *********************************************************************
 if has("gui_running")
   " sweet color scheme using true color
-  "colorscheme ryan
-  colorscheme moria
+  colorscheme ryan
+  "colorscheme moria
 else
   set bg=dark
 end
