@@ -8,5 +8,6 @@ augroup filetypedetect
   au BufRead,BufNewFile *.as setfiletype actionscript
   au BufRead,BufNewFile *.markdown,*.mkd setfiletype mkd
   au BufRead,BufNewFile Gemfile setfiletype ruby
+  au BufRead,BufNewFile *.pdf.prawn setfiletype ruby
   au BufRead,BufNewFile *.wsdl setfiletype xml
 augroup END
