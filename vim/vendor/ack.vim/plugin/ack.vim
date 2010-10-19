@@ -44,7 +44,7 @@ function! LAckAdd(args)
     exec "redraw!"
 endfunction
 
-command! -nargs=* -complete=file Ack call Ack(<q-args>)
-command! -nargs=* -complete=file AckAdd call AckAdd(<q-args>)
+command! -nargs=* -complete=file Ack call LAck(<q-args>)
+command! -nargs=* -complete=file AckAdd call LAckAdd(<q-args>)
 command! -nargs=* -complete=file LAck call LAck(<q-args>)
 command! -nargs=* -complete=file LAckAdd call LAckAdd(<q-args>)
