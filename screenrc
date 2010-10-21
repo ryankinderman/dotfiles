@@ -1,2 +1,4 @@
 # Make xterm scrolling work properly with screen.
 termcapinfo xterm-color|xterm|xterms|xs|rxvt ti@:te@
+hardstatus
+hardstatus alwayslastline '%{= kK}%-Lw%{= KW}%50>%n%f %t%{= kK}%+Lw%< %{=kG}%-= %l %{-}' # %H(prod)'
