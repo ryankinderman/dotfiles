@@ -41,3 +41,7 @@ alias reload="source $HOME/.bash_profile"
 alias e='exit'
 alias mysqlstart.rails="sudo mysqld_safe --defaults-file=$DOTFILES/my.cnf.rails 2>&1 > /dev/null &"
 alias mysqlstop="sudo killall mysqld"
+
+in_login_shell() {
+  if [[ "$(shopt login_shell)" =~ "off" ]]; then echo 1; else echo 0; fi
+}
