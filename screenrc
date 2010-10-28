@@ -1,4 +1,7 @@
-# Make xterm scrolling work properly with screen.
+escape ^Zz
+autodetach on
+startup_message off
+defscrollback 30000
 termcapinfo xterm-color|xterm|xterms|xs|rxvt ti@:te@
 hardstatus
 hardstatus alwayslastline '%{= kK}%-Lw%{= KW}%50>%n%f %t%{= kK}%+Lw%< %{=kG}%-= %l %{-}' # %H(prod)'
