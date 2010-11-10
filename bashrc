@@ -9,7 +9,7 @@ parse_git_branch() {
 PS1="\h:\u \W\$(parse_git_branch)\$ "
 
 PATH=$ORIGINAL_PATH
-export PATH=$HOME/bin:$DOTFILES/bin:$HOME/bin/wireshark:$HOME/bin/flex/bin:/usr/local/texlive/2008/bin/universal-darwin:/opt/local/bin:/usr/local/mysql/bin:$HOME/.gem/ruby/1.8/bin:$ORIGINAL_PATH
+export PATH=$HOME/bin:$DOTFILES/bin:$HOME/installs/bin:$HOME/bin/wireshark:$HOME/bin/flex/bin:/usr/local/texlive/2008/bin/universal-darwin:/opt/local/bin:/usr/local/mysql/bin:$HOME/.gem/ruby/1.8/bin:$ORIGINAL_PATH
 export MANPATH=/opt/local/man:$MANPATH
 export EDITOR=/usr/bin/vim
 export JAVA_HOME=/System/Library/Frameworks/JavaVM.framework/Home
