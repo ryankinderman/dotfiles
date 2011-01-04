@@ -10,4 +10,5 @@ augroup filetypedetect
   au BufRead,BufNewFile Gemfile setfiletype ruby
   au BufRead,BufNewFile *.pdf.prawn setfiletype ruby
   au BufRead,BufNewFile *.wsdl setfiletype xml
+  au BufRead,BufNewFile *.html.mustache setfiletype html
 augroup END
