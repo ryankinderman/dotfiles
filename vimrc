@@ -71,6 +71,7 @@ if has("autocmd")
   " For all ruby files, set 'shiftwidth' and 'tabspace' to 2 and expand tabs
   " to spaces.
   autocmd FileType ruby,eruby set sw=2 ts=2 et
+  autocmd FileType python set sw=4 ts=4 et
 
   " When editing a file, always jump to the last known cursor position.
   " Don't do it when the position is invalid or when inside an event handler
