@@ -185,6 +185,7 @@ call DisableFolding()
 let g:netrw_liststyle=3
 let g:netrw_browse_split=0
 let g:netrw_list_hide='^\..*\.swp$'
+let g:netrw_altv=1
 
 " Colors *********************************************************************
 if has("gui_running")
