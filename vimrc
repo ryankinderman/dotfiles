@@ -180,12 +180,25 @@ function! DisableFolding()
 endfunction
 set foldmethod=syntax
 call DisableFolding()
+function! FoldLevelSpaces(lnum)
+  let line = getline(a:lnum)
+  let cnt = 2
+  let pos = match(line, " ")
+  while pos != -1
+    let cnt = cnt + 1
+    let pos = match(line, " ", pos + 1)
+  endwhile
+  return cnt/&tabstop
+endfunction
 
 " Netrw
 let g:netrw_liststyle=3
 let g:netrw_browse_split=0
 let g:netrw_list_hide='^\..*\.swp$'
 let g:netrw_altv=1
+
+" Command-T
+let g:CommandTMaxFiles=80085
 
 " Colors *********************************************************************
 if has("gui_running")
