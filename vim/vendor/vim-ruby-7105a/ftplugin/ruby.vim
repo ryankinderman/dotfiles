@@ -1,17 +1,11 @@
 " Vim filetype plugin
 " Language:		Ruby
-" Maintainer:		Gavin Sinclair <gsinclair at gmail.com>
-" Last Change:		2010 Mar 15
-" URL:			http://vim-ruby.rubyforge.org
+" Maintainer:		Tim Pope <vimNOSPAM@tpope.org>
+" URL:			https://github.com/vim-ruby/vim-ruby
 " Anon CVS:		See above site
 " Release Coordinator:  Doug Kearns <dougkearns@gmail.com>
 " ----------------------------------------------------------------------------
-"
-" Original matchit support thanks to Ned Konz.  See his ftplugin/ruby.vim at
-"   http://bike-nomad.com/vim/ruby.vim.
-" ----------------------------------------------------------------------------
 
-" Only do this when not done yet for this buffer
 if (exists("b:did_ftplugin"))
   finish
 endif
@@ -72,21 +66,24 @@ setlocal commentstring=#\ %s
 if !exists("s:ruby_path")
   if exists("g:ruby_path")
     let s:ruby_path = g:ruby_path
-  elseif has("ruby") && has("win32")
-    ruby VIM::command( 'let s:ruby_path = "%s"' % ($: + begin; require %q{rubygems}; Gem.all_load_paths.sort.uniq; rescue LoadError; []; end).join(%q{,}) )
-    let s:ruby_path = '.,' . substitute(s:ruby_path, '\%(^\|,\)\.\%(,\|$\)', ',,', '')
-  elseif executable("ruby")
-    let s:code = "print ($: + begin; require %q{rubygems}; Gem.all_load_paths.sort.uniq; rescue LoadError; []; end).join(%q{,})"
-    if &shellxquote == "'"
-      let s:ruby_path = system('ruby -e "' . s:code . '"')
-    else
-      let s:ruby_path = system("ruby -e '" . s:code . "'")
-    endif
-    let s:ruby_path = '.,' . substitute(s:ruby_path, '\%(^\|,\)\.\%(,\|$\)', ',,', '')
   else
-    " If we can't call ruby to get its path, just default to using the
-    " current directory and the directory of the current file.
-    let s:ruby_path = ".,,"
+    if has("ruby") && has("win32")
+      ruby VIM::command( 'let s:ruby_path = "%s"' % $:.join(%q{,}) )
+      let s:ruby_path = substitute(s:ruby_path, '\%(^\|,\)\.\%(,\|$\)', ',,', '')
+    elseif executable("ruby")
+      let s:code = "print $:.join(%q{,})"
+      if &shellxquote == "'"
+        let s:ruby_path = system('ruby -e "' . s:code . '"')
+      else
+        let s:ruby_path = system("ruby -e '" . s:code . "'")
+      endif
+      let s:ruby_path = substitute(s:ruby_path, '\%(^\|,\)\.\%(,\|$\)', ',,', '')
+    else
+      let s:ruby_path = substitute($RUBYLIB,':',',','g')
+    endif
+    if &g:path !~# '\v^\.%(,/%(usr|emx)/include)=,,$'
+      let s:ruby_path = substitute(&g:path,',,$',',','') . ',' . s:ruby_path
+    endif
   endif
 endif
 
@@ -141,6 +138,17 @@ if !exists("g:no_plugin_maps") && !exists("g:no_ruby_maps")
           \."| sil! exe 'nunmap <buffer> <C-W>]'| sil! exe 'nunmap <buffer> <C-W><C-]>'"
           \."| sil! exe 'nunmap <buffer> <C-W>g<C-]>'| sil! exe 'nunmap <buffer> <C-W>g]'"
           \."| sil! exe 'nunmap <buffer> <C-W>}'| sil! exe 'nunmap <buffer> <C-W>g}'"
+  endif
+
+  if maparg("gf",'n') == ''
+    " By using findfile() rather than gf's normal behavior, we prevent
+    " erroneously editing a directory.
+    nnoremap <silent> <buffer> gf         :<C-U>exe <SID>gf(v:count1,"gf",'edit')<CR>
+    nnoremap <silent> <buffer> <C-W>f     :<C-U>exe <SID>gf(v:count1,"\<Lt>C-W>f",'split')<CR>
+    nnoremap <silent> <buffer> <C-W><C-F> :<C-U>exe <SID>gf(v:count1,"\<Lt>C-W>\<Lt>C-F>",'split')<CR>
+    nnoremap <silent> <buffer> <C-W>gf    :<C-U>exe <SID>gf(v:count1,"\<Lt>C-W>gf",'tabedit')<CR>
+    let b:undo_ftplugin = b:undo_ftplugin
+          \."| sil! exe 'nunmap <buffer> gf' | sil! exe 'nunmap <buffer> <C-W>f' | sil! exe 'nunmap <buffer> <C-W><C-F>' | sil! exe 'nunmap <buffer> <C-W>gf'"
   endif
 endif
 
@@ -239,6 +247,20 @@ function! RubyCursorIdentifier()
   let raw          = matchstr(getline('.')[col-1 : ],pattern)
   let stripped     = substitute(substitute(raw,'\s\+=$','=',''),'^\s*:\=','','')
   return stripped == '' ? expand("<cword>") : stripped
+endfunction
+
+function! s:gf(count,map,edit) abort
+  let target = expand('<cfile>')
+  if target =~# '^\%(require\|load\|autoload\)$' && getline('.') =~# '^\s*\%(require \|load \|autoload :\w\+,\)\s*\(["'']\).*\1'
+    let target = matchstr(getline('.'),'\(["'']\)\zs.\{-\}\ze\1')
+    let g:target = target
+  endif
+  let found = findfile(target, &path, a:count)
+  if found ==# ''
+    return 'norm! '.a:count.a:map
+  else
+    return a:edit.' '.fnameescape(found)
+  endif
 endfunction
 
 "
