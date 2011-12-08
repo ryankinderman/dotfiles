@@ -110,6 +110,10 @@ cnoremap <C-b> <Left>
 cnoremap <Esc>b <S-Left>
 cnoremap <Esc>f <S-Right>
 
+" Commands " ******************************************************************
+" Copy the filename of the current buffer to the clipboard
+command! CopyFilenameToClipboard :!echo "%:p" | pbcopy
+
 " Sessions ********************************************************************
 set sessionoptions=blank,buffers,curdir,folds,help,options,resize,tabpages,winpos,winsize,globals
 
