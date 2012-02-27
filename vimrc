@@ -68,7 +68,8 @@ if has("autocmd")
   au!
 
   " For all text files set 'textwidth' to 78 characters.
-  autocmd FileType text setlocal textwidth=78
+  "autocmd FileType text setlocal textwidth=78
+
   " For all ruby files, set 'shiftwidth' and 'tabspace' to 2 and expand tabs
   " to spaces.
   autocmd FileType ruby,eruby set sw=2 ts=2 et
@@ -157,12 +158,14 @@ endfunction
 com! WW call WordWrap("on")
 com! Ww call WordWrap("off")
 
+
 " White space ****************************************************************
 let hiExtraWhiteSpace = "hi ExtraWhitespace ctermbg=red guibg=red"
 exec hiExtraWhiteSpace
 au ColorScheme * exec hiExtraWhiteSpace
 au InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 au BufRead,InsertLeave * match ExtraWhitespace /\s\+$/
+
 
 " Markdown *******************************************************************
 function! PreviewMKD()
@@ -173,6 +176,7 @@ endfunction
 autocmd BufRead *.markdown map <Leader>p :call PreviewMKD()<CR>
 autocmd BufRead *.markdown call WordWrap("on")
 autocmd BufRead *.markdown set spell
+
 
 " Folding *********************************************************************
 function! EnableFolding()
@@ -196,15 +200,22 @@ function! FoldLevelSpaces(lnum)
   return cnt/&tabstop
 endfunction
 
+
 " Netrw
 let g:netrw_liststyle=3
 let g:netrw_browse_split=0
 let g:netrw_list_hide='^\..*\.swp$'
 let g:netrw_altv=1
 
+
 " Command-T
 let g:CommandTMaxFiles=80085
 let g:CommandTMaxHeight=20
+
+
+" VimClojure
+let g:vimclojure#ParenRainbowColors=1
+
 
 " Colors *********************************************************************
 if has("gui_running")
@@ -244,5 +255,6 @@ function! ConfigureForMMH()
   set tags=./tags,$MMH_HOME/tags,$MMH_ROOT/stable/tags,$MMH_ROOT/indexer/tags,$MMH_ROOT/jdk_tags,$HOME/tags,tags
 endfunction
 com! Mmh call ConfigureForMMH()
+
 
 " Java ***********************************************************************
