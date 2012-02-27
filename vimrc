@@ -214,14 +214,12 @@ let g:CommandTMaxHeight=20
 
 
 " VimClojure
-let g:vimclojure#ParenRainbowColors=1
+let g:vimclojure#ParenRainbow=1
 
 
 " Colors *********************************************************************
-if has("gui_running")
-  " sweet color scheme using true color
-  colorscheme ryan
-  "colorscheme moria
+if has("gui_running") || &t_Co == 256
+  colorscheme xoria256-ryan
 else
   set bg=dark
 end

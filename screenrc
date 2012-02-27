@@ -2,6 +2,17 @@ escape ^Zz
 autodetach on
 startup_message off
 defscrollback 30000
-termcapinfo xterm-color|xterm|xterms|xs|rxvt ti@:te@
+
+term "screen-256color-bce"
+# note: for explanation of ti@ and te@ below:
+#   http://www.shallowsky.com/linux/noaltscreen.html
+termcapinfo xterm-256color|xterm-color|xterm|xterms|xs|rxvt ti@:te@
+
 hardstatus
 hardstatus alwayslastline '%{= kK}%-Lw%{= KW}%50>%n%f %t%{= kK}%+Lw%< %{=kG}%-= %l %{-}' # %H(prod)'
+
+#terminfo and termcap for nice 256 color terminal
+# allow bold colors - necessary for some reason
+attrcolor b ".I"
+# erase background with current bg color
+defbce "on"
