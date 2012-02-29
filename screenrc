@@ -3,6 +3,12 @@ autodetach on
 startup_message off
 defscrollback 30000
 
+# bindings
+bind j focus down
+bind k focus up
+bind t focus top
+bind b focus bottom
+
 term "screen-256color-bce"
 # note: for explanation of ti@ and te@ below:
 #   http://www.shallowsky.com/linux/noaltscreen.html
