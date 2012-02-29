@@ -239,7 +239,7 @@ end
 
 " Colors *********************************************************************
 if has("gui_running") || &t_Co == 256
-  colorscheme xoria256-ryan
+  colorscheme wombat256-ryan
 else
   set bg=dark
 end
