@@ -111,9 +111,6 @@ cnoremap <C-b> <Left>
 cnoremap <Esc>b <S-Left>
 cnoremap <Esc>f <S-Right>
 
-" Commands " ******************************************************************
-" Copy the filename of the current buffer to the clipboard
-command! CopyFilenameToClipboard :!echo "%:p" | pbcopy
 
 " Sessions ********************************************************************
 set sessionoptions=blank,buffers,curdir,folds,help,options,resize,tabpages,winpos,winsize,globals
@@ -215,6 +212,29 @@ let g:CommandTMaxHeight=20
 
 " VimClojure
 let g:vimclojure#ParenRainbow=1
+
+
+" Copy/paste *****************************************************************
+
+if system("which pbcopy") != ""
+  " On a Mac with pbcopy command
+
+  " Copy the filename of the current buffer to the clipboard
+  command! CopyFilenameToClipboard :!echo "%:p" | pbcopy
+
+  "function! GetSelection()
+  "  let region_start_pos = getpos("v")
+  "  let region_end_pos = getpos(".")
+  "  return [region_start_pos, region_end_pos]
+  "endfunction
+  "function! s:pbcopy(text)
+  "  system("pbcopy", text)
+  "endfunction
+
+  "command! -range Pbcopy s:pbcopy(getline("."))
+
+  "map <Leader>y call '<,'>
+end
 
 
 " Colors *********************************************************************
