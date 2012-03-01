@@ -222,18 +222,29 @@ if system("which pbcopy") != ""
   " Copy the filename of the current buffer to the clipboard
   command! CopyFilenameToClipboard :!echo "%:p" | pbcopy
 
-  "function! GetSelection()
-  "  let region_start_pos = getpos("v")
-  "  let region_end_pos = getpos(".")
-  "  return [region_start_pos, region_end_pos]
-  "endfunction
-  "function! s:pbcopy(text)
-  "  system("pbcopy", text)
-  "endfunction
+  function! PbCopy(type, ...)
+    " This logic is mostly lifted from :help E775
+    let sel_save = &selection
+    let &selection = "inclusive"
+    let reg_save = @@
 
-  "command! -range Pbcopy s:pbcopy(getline("."))
+    if a:0  " Invoked from Visual mode, use '< and '> marks.
+      silent exe "normal! `<" . a:type . "`>y"
+    elseif a:type == "line"
+      silent exe "normal! '[V']y"
+    elseif a:type == "block"
+      silent exe "normal! `[\<C-V>`]y"
+    else
+      silent exe "normal! `[v`]y"
+    end
 
-  "map <Leader>y call '<,'>
+    call system("pbcopy", @@)
+
+    let &selection = sel_save
+    let @@ = reg_save
+  endfunction
+
+  vmap <silent> Y :<C-U>call PbCopy(visualmode(), 1)<CR>
 end
 
 
