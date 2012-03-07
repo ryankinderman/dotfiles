@@ -230,6 +230,8 @@ if system("which pbcopy") != ""
 
     if a:0  " Invoked from Visual mode, use '< and '> marks.
       silent exe "normal! `<" . a:type . "`>y"
+    elseif a:type == "command"
+      let @@ = getline(".")
     elseif a:type == "line"
       silent exe "normal! '[V']y"
     elseif a:type == "block"
@@ -245,6 +247,7 @@ if system("which pbcopy") != ""
   endfunction
 
   vmap <silent> Y :<C-U>call PbCopy(visualmode(), 1)<CR>
+  map <Leader>yy :call PbCopy("command")<CR>
 end
 
 
