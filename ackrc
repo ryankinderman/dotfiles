@@ -2,3 +2,4 @@
 --type-set=sass=.sass
 --type-set=haml=.haml
 --type-set=mustache=.mustache
+--type-set=coffee=.coffee
