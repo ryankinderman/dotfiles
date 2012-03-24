@@ -31,7 +31,7 @@ if [[ -s "$DOTFILES/bash/git-completion.bash" ]] ; then source "$DOTFILES/bash/g
 
 if [[ -s "$HOME/.rvm/scripts/rvm" ]] ; then
   source "$HOME/.rvm/scripts/rvm"
-  rvm default
+  rvm use default
 fi
 
 platform='unknown'
