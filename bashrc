@@ -51,7 +51,7 @@ alias e='exit'
 alias mysqlsrv="sudo /Library/StartupItems/MySQLCOM/MySQLCOM"
 alias synergyd.stop='launchctl list  | grep synergyd | awk '\''{print $3}'\'' | xargs launchctl stop'
 if [ "$(tput colors)" == "256" ]; then
-  alias tmux='tmux -2'
+  alias tmux='tmux set-option -g default-terminal screen-256color \; new-session'
 fi
 
 in_login_shell() {
