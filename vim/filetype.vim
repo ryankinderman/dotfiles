@@ -11,4 +11,5 @@ augroup filetypedetect
   au BufRead,BufNewFile *.pdf.prawn setfiletype ruby
   au BufRead,BufNewFile *.wsdl setfiletype xml
   au BufRead,BufNewFile *.html.mustache setfiletype html
+  au BufRead,BufNewFile *.md setfiletype markdown
 augroup END
