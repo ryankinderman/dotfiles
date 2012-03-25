@@ -50,6 +50,9 @@ alias reload="source $HOME/.bash_profile"
 alias e='exit'
 alias mysqlsrv="sudo /Library/StartupItems/MySQLCOM/MySQLCOM"
 alias synergyd.stop='launchctl list  | grep synergyd | awk '\''{print $3}'\'' | xargs launchctl stop'
+if [ "$(tput colors)" == "256" ]; then
+  alias tmux='tmux -2'
+fi
 
 in_login_shell() {
   if [[ "$(shopt login_shell)" =~ "off" ]]; then echo 1; else echo 0; fi
