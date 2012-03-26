@@ -168,11 +168,12 @@ au BufRead,InsertLeave * match ExtraWhitespace /\s\+$/
 function! PreviewMKD()
   let tmpfile = tempname()
   exe "write! " tmpfile
-  exe "!preview_mkd " tmpfile
+  exe "silent !preview_mkd " tmpfile
+  exe "redraw!"
 endfunction
-autocmd BufRead *.markdown map <Leader>p :call PreviewMKD()<CR>
-autocmd BufRead *.markdown call WordWrap("on")
-autocmd BufRead *.markdown set spell
+autocmd FileType markdown map <Leader>p :call PreviewMKD()<CR>
+autocmd FileType markdown call WordWrap("on")
+autocmd FileType markdown set spell
 
 
 " Folding *********************************************************************
