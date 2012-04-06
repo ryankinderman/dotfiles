@@ -59,7 +59,18 @@ syn region markdownId matchgroup=markdownIdDelimiter start="\[" end="\]" keepend
 syn region markdownAutomaticLink matchgroup=markdownUrlDelimiter start="<\%(\w\+:\|[[:alnum:]_+-]\+@\)\@=" end=">" keepend oneline
 
 syn region markdownItalic start="\S\@<=\*\|\*\S\@=" end="\S\@<=\*\|\*\S\@=" keepend contains=markdownLineStart
-syn region markdownItalic start="\S\@<=_\|_\S\@=" end="\S\@<=_\|_\S\@=" keepend contains=markdownLineStart
+syn region markdownItalic start="\_[^\s\\]\@<=_\|\_[\\]\@<!_\S\@=" end="\_[^\s\\]\@<=_\|\_[\\]\@<!_\S\@=" keepend contains=markdownLineStart
+" matches an '_' that is not prefixed with a whitespace char or '\', but may be prefixed with '\n'
+" OR
+" matches an '_' that is not prefixed with a '\' and is not suffixed with a whitespace char
+"
+" What is a '_' that is not prefixed with whitespace or '\'
+"  _ ab_
+"\_[^\s\\]\@<=_\|[^\\]\@<=_\S\@=
+"testing if below somewhat fixes newline handling ----v
+"syn region markdownItalic start="\_\S\@<=_\|_\S\@=" end="\_\S\@<=_\|_\S\@=" keepend contains=markdownLineStart
+"original -----v
+"syn region markdownItalic start="\S\@<=_\|_\S\@=" end="\S\@<=_\|_\S\@=" keepend contains=markdownLineStart
 syn region markdownBold start="\S\@<=\*\*\|\*\*\S\@=" end="\S\@<=\*\*\|\*\*\S\@=" keepend contains=markdownLineStart
 syn region markdownBold start="\S\@<=__\|__\S\@=" end="\S\@<=__\|__\S\@=" keepend contains=markdownLineStart
 syn region markdownBoldItalic start="\S\@<=\*\*\*\|\*\*\*\S\@=" end="\S\@<=\*\*\*\|\*\*\*\S\@=" keepend contains=markdownLineStart
