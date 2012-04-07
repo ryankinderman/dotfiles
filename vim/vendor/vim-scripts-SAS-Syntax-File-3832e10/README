@@ -1,0 +1,3 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=3522
+
+Originally based on the script written by James Kidd years ago. The approach for highlighting SAS statement keywords has been completely rewritten (hopefully more accurate and content sensitive). New statement keywords being introduced in SAS 9.1/9.2/9.3, such as those of ODS statement, PROC SGPLOT and hash object, have been supported. Also added highlighting for format tags and user defined macro functions.
