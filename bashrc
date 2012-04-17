@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/bash
+source $DOTFILES/bash/utils.bash
 
 # Test for an interactive shell.  There is no need to set anything
 # past this point for scp and rcp, and it's important to refrain from
@@ -57,3 +58,5 @@ fi
 in_login_shell() {
   if [[ "$(shopt login_shell)" =~ "off" ]]; then echo 1; else echo 0; fi
 }
+
+source $DOTFILES/bash/local.bash
