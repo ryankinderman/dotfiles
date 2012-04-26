@@ -4,3 +4,4 @@
 --type-set=haml=.haml
 --type-set=mustache=.mustache
 --type-set=coffee=.coffee
+--type-add=ruby=.ru
