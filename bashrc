@@ -51,8 +51,15 @@ alias reload="source $HOME/.bash_profile"
 alias e='exit'
 alias mysqlsrv="sudo /Library/StartupItems/MySQLCOM/MySQLCOM"
 alias synergyd.stop='launchctl list  | grep synergyd | awk '\''{print $3}'\'' | xargs launchctl stop'
+
+# Generate tmux configs that are dependent on the capabilities of the parent shell
+local_tmux_conf="$HOME/.tmux.conf.local"
 if [ "$(tput colors)" == "256" ]; then
-  alias tmux='tmux set-option -g default-terminal screen-256color \; new-session'
+  cat <<EOS > $local_tmux_conf
+set-option -g default-terminal screen-256color
+EOS
+else
+  echo "" > $local_tmux_conf
 fi
 
 in_login_shell() {
