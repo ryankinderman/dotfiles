@@ -1,6 +1,14 @@
 #!/bin/bash
 source $DOTFILES/bash/utils.bash
 
+in_login_shell() {
+  if [[ "$(shopt login_shell)" =~ "off" ]]; then echo 1; else echo 0; fi
+}
+
+parse_git_branch() {
+  git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
+}
+
 # Test for an interactive shell.  There is no need to set anything
 # past this point for scp and rcp, and it's important to refrain from
 # outputting anything in those cases.
@@ -13,9 +21,6 @@ if [ "$ORIGINAL_PATH" = "" ]; then
    export ORIGINAL_PATH=$PATH
 fi
 
-parse_git_branch() {
-  git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
-}
 PS1="\h:\u \W\$(parse_git_branch)\$ "
 
 PATH=$ORIGINAL_PATH
@@ -52,6 +57,10 @@ alias e='exit'
 alias mysqlsrv="sudo /Library/StartupItems/MySQLCOM/MySQLCOM"
 alias synergyd.stop='launchctl list  | grep synergyd | awk '\''{print $3}'\'' | xargs launchctl stop'
 
+###############################
+# tmux
+###############################
+
 # Generate tmux configs that are dependent on the capabilities of the parent shell
 local_tmux_conf="$HOME/.tmux.conf.local"
 if [ "$(tput colors)" == "256" ]; then
@@ -62,8 +71,11 @@ else
   echo "" > $local_tmux_conf
 fi
 
-in_login_shell() {
-  if [[ "$(shopt login_shell)" =~ "off" ]]; then echo 1; else echo 0; fi
-}
+if [ "$TMUX" != "" ]; then
+  bind -x '"\C-l":clear && tmux clear-history'
+fi
 
+####################################
+# Source configs that must be last
+####################################
 source $DOTFILES/bash/local.bash
