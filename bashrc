@@ -36,8 +36,12 @@ fi
 if [[ -s "$DOTFILES/bash/git-completion.bash" ]] ; then source "$DOTFILES/bash/git-completion.bash" ; fi
 
 if [[ -s "$HOME/.rvm/scripts/rvm" ]] ; then
-  source "$HOME/.rvm/scripts/rvm"
-  rvm use default
+  if [[ "$(which rvm)" != "" ]]; then
+    rvm reload
+  else
+    source "$HOME/.rvm/scripts/rvm"
+    rvm use default
+  fi
 fi
 
 platform='unknown'
