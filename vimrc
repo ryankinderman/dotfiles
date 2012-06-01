@@ -254,6 +254,59 @@ if system("which pbcopy") != ""
 end
 
 
+" Tab titles *****************************************************************
+" Useful examples at:
+" http://vim.wikia.com/wiki/Show_tab_number_in_your_tab_line
+
+if exists("+showtabline")
+  function! MyTabLine()
+    let s = ''
+    let t = tabpagenr()
+    let i = 1
+    while i <= tabpagenr('$')
+      let buflist = tabpagebuflist(i)
+      let winnr = tabpagewinnr(i)
+      let m = 0
+      for b in buflist
+        if getbufvar(b, "&modified")
+          let m += 1
+        endif
+      endfor
+      let s .= '%' . i . 'T'
+      let s .= (i == t ? '%#TabLineSel#' : '%#TabLine#')
+      let s .= ' '
+      let s .= i . ':'
+      if m > 0
+        let s .= '+'
+      endif
+      let s .= ' '
+      let buf = buflist[winnr - 1]
+      let buftype = getbufvar(buf, "&buftype")
+      let file = bufname(buf)
+      let file = fnamemodify(file, ':p:t')
+      if buftype == 'help'
+        let s .= '[Help] '
+      elseif buftype == 'quickfix'
+        if empty(getloclist(winnr))
+          let s .= '[Quickfix List]'
+        else
+          let s .= '[Location List]'
+        endif
+      elseif file == ''
+        let s .= '[No Name]'
+      endif
+      let s .= file
+      let s .= ' '
+      let i = i + 1
+    endwhile
+    let s .= '%T%#TabLineFill#%='
+    let s .= (tabpagenr('$') > 1 ? '%999XX' : 'X')
+    return s
+  endfunction
+  set tabline=%!MyTabLine()
+endif
+
+
 " Colors *********************************************************************
 if has("gui_running") || &t_Co == 256
   colorscheme wombat256-ryan
