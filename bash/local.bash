@@ -7,7 +7,7 @@
 define_cd_with_bash_local() {
   local cmd=$1
   eval $cmd'_with_bash_local() {
-    '$cmd'_without_bash_local $@
+    '$cmd'_without_bash_local "$@"
     local filename=.bash_local
     local script=${BASH_SOURCE[0]}
 

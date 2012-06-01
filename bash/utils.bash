@@ -30,7 +30,7 @@ decorate_function() {
     eval "$(echo "$undecorated_func_name()" ; echo "$prev_declaration" | tail -n +2)"
   elif [ "$command_type" == "builtin" ]; then
     eval $undecorated_func_name'() {
-      builtin '$func' $@
+      builtin '$func' "$@"
     }'
   else
     echo "unrecognized type of original $func: $command_type"
@@ -39,7 +39,7 @@ decorate_function() {
 
   local decorated_func_name=$func"_with_"$feature
   eval $func'() {
-    '$decorated_func_name' $@
+    '$decorated_func_name' "$@"
   }'
 }
 
