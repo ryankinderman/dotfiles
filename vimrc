@@ -91,20 +91,22 @@ else
 
 endif " has("autocmd")
 
+
+" Key mappings ****************************************************************
 " Easily open and reload vimrc
 "<Leader>v brings up my .vimrc
 "<Leader>V reloads it -- making all changes active (have to save first)
 map <Leader>v :sp $DOTFILES/vimrc<CR>
 map <silent> <Leader>V :source $HOME/.vimrc<CR>:if has("gui")<CR>:source $HOME/.gvimrc<CR>:endif<CR>:filetype detect<CR>:exe ":echo 'vimrc reloaded'"<CR>
 
-" Key sequence mappings
 " In command-mode, typing %/ will replace those chars with the directory of
 " the file in the current buffer
 cmap %/ <C-r>=expand('%:p:h')<CR>/
+
 " execute current line as shell command, and open output in new window
 map <Leader>x :silent . w ! sh > ~/.vim_cmd.out<CR>:new ~/.vim_cmd.out<CR>
 
-" Character mapping
+" Emacs-like command-mode cursor navigation
 cnoremap <C-a> <Home>
 cnoremap <C-f> <Right>
 cnoremap <C-b> <Left>
