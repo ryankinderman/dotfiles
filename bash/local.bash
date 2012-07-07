@@ -6,10 +6,20 @@
 
 define_cd_with_bash_local() {
   local cmd=$1
-  eval $cmd'_with_bash_local() {
+  local decorated_func_name=$cmd'_with_bash_local'
+
+  eval $decorated_func_name'() {
+    export __rdk_bash_local_lock
+    : __rdk_bash_local_lock:${__rdk_bash_local_lock:=0}
+    : __rdk_bash_local_lock:$((__rdk_bash_local_lock+=1))
+    local lock=$__rdk_bash_local_lock
+
     '$cmd'_without_bash_local "$@"
+
     local exit_val=$?
     [[ $exit_val != 0 ]] && return $exit_val
+
+    (( lock > 1 )) && return 0 # no nesting
 
     local filename=.bash_local
     local script=${BASH_SOURCE[0]}
@@ -33,6 +43,8 @@ echo "$PWD" >> $HOME/$filename.allowed
 STR
       fi
     fi
+
+    unset __rdk_bash_local_lock
   }'
   decorate_function "$cmd" "bash_local"
 }
