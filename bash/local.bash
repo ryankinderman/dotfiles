@@ -15,43 +15,28 @@ define_cd_with_bash_local() {
     : __rdk_bash_local_lock_nesting:$((__rdk_bash_local_lock_nesting+=1))
     local lock_nesting=$__rdk_bash_local_lock_nesting
 
-    '$cmd'_without_bash_local "$@"
+    if '$cmd'_without_bash_local "$@"; then
 
-    local exit_val=$?
-    if [[ $exit_val != 0 ]]; then
-      if (( $lock_nesting == 1 )); then
-        unset __rdk_bash_local_lock
-        unset __rdk_bash_local_lock_nesting
-      fi
-      return $exit_val
-    fi
+      local i
+      for (( i=0 ; i < ${#__rdk_bash_local_lock[*]} ; i=$i+1 )) ; do
+        if [[ ${__rdk_bash_local_lock[$i]} == $PWD ]]; then
+          break
+        fi
+      done
 
-    local i
-    for (( i=0 ; i < ${#__rdk_bash_local_lock[*]} ; i=$i+1 )) ; do
-      if [[ ${__rdk_bash_local_lock[$i]} == $PWD ]]; then
-        break
-      fi
-    done
-    if (( $i < ${#__rdk_bash_local_lock[*]} )); then
-      if (( $lock_nesting == 1 )); then
-        unset __rdk_bash_local_lock
-        unset __rdk_bash_local_lock_nesting
-      fi
-      return 0 # no nesting
-    else
-      __rdk_bash_local_lock[$i]=$PWD
-    fi
+      if (( $i == ${#__rdk_bash_local_lock[*]} )); then
+        __rdk_bash_local_lock[$i]=$PWD
 
-    local filename=.bash_local
-    local script=${BASH_SOURCE[0]}
+        local filename=.bash_local
+        local script=${BASH_SOURCE[0]}
 
-    if [[ (-f $filename) ]]; then
-      if [[ "$(grep $PWD $HOME/$filename.allowed > /dev/null 2>&1 ; echo $?)" == "0" ]]; then
-        local pwd=$PWD
-        source $filename
-        echo "Sourced $filename in $pwd"
-      else
-        cat <<STR
+        if [[ (-f $filename) ]]; then
+          if [[ "$(grep $PWD $HOME/$filename.allowed > /dev/null 2>&1 ; echo $?)" == "0" ]]; then
+            local pwd=$PWD
+            source $filename
+            echo "Sourced $filename in $pwd"
+          else
+            cat <<STR
 ===============================================================================
 From: $script
 -------------------------------------------------------------------------------
@@ -63,6 +48,8 @@ current directory to the list of allowed directories, run:
 echo "$PWD" >> $HOME/$filename.allowed
 ===============================================================================
 STR
+          fi
+        fi
       fi
     fi
 
