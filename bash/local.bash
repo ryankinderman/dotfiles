@@ -10,24 +10,46 @@ define_cd_with_bash_local() {
 
   eval $decorated_func_name'() {
     export __rdk_bash_local_lock
-    : __rdk_bash_local_lock:${__rdk_bash_local_lock:=0}
-    : __rdk_bash_local_lock:$((__rdk_bash_local_lock+=1))
-    local lock=$__rdk_bash_local_lock
+    export __rdk_bash_local_lock_nesting
+    : __rdk_bash_local_lock_nesting:${__rdk_bash_local_lock_nesting:=0}
+    : __rdk_bash_local_lock_nesting:$((__rdk_bash_local_lock_nesting+=1))
+    local lock_nesting=$__rdk_bash_local_lock_nesting
 
     '$cmd'_without_bash_local "$@"
 
     local exit_val=$?
-    [[ $exit_val != 0 ]] && return $exit_val
+    if [[ $exit_val != 0 ]]; then
+      if (( $lock_nesting == 1 )); then
+        unset __rdk_bash_local_lock
+        unset __rdk_bash_local_lock_nesting
+      fi
+      return $exit_val
+    fi
 
-    (( lock > 1 )) && return 0 # no nesting
+    local i
+    for (( i=0 ; i < ${#__rdk_bash_local_lock[*]} ; i=$i+1 )) ; do
+      if [[ ${__rdk_bash_local_lock[$i]} == $PWD ]]; then
+        break
+      fi
+    done
+    if (( $i < ${#__rdk_bash_local_lock[*]} )); then
+      if (( $lock_nesting == 1 )); then
+        unset __rdk_bash_local_lock
+        unset __rdk_bash_local_lock_nesting
+      fi
+      return 0 # no nesting
+    else
+      __rdk_bash_local_lock[$i]=$PWD
+    fi
 
     local filename=.bash_local
     local script=${BASH_SOURCE[0]}
 
     if [[ (-f $filename) ]]; then
       if [[ "$(grep $PWD $HOME/$filename.allowed > /dev/null 2>&1 ; echo $?)" == "0" ]]; then
+        local pwd=$PWD
         source $filename
-        echo "Sourced $filename"
+        echo "Sourced $filename in $pwd"
       else
         cat <<STR
 ===============================================================================
@@ -44,7 +66,10 @@ STR
       fi
     fi
 
-    unset __rdk_bash_local_lock
+    if (( $lock_nesting == 1 )); then
+      unset __rdk_bash_local_lock
+      unset __rdk_bash_local_lock_nesting
+    fi
   }'
   decorate_function "$cmd" "bash_local"
 }
