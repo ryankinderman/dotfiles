@@ -333,7 +333,8 @@ function! FListColorSchemes()
   0
   setlocal nomodified nomodifiable bufhidden=delete nonumber nowrap foldcolumn=0 nofoldenable
   nnoremap <buffer> <silent> q    :<C-U>bdelete<CR>
-  nnoremap <buffer> <silent> <CR> :<C-U>set t_Co=256<CR>:exe "colorscheme ".getline('.')<CR>
+  nnoremap <buffer> <silent> <CR> :<C-U>set t_Co=256<CR>:hi clear<CR>:if exists("syntax_on")<CR>:syntax reset<CR>:endif<CR>:exe "colorscheme ".getline('.')<CR>
+  ":<C-U>
 endfunction
 command! ListColorSchemes call FListColorSchemes()
 
