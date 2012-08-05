@@ -309,7 +309,7 @@ endif
 
 " Colors *********************************************************************
 if has("gui_running") || &t_Co == 256
-  colorscheme jellybeans
+  colorscheme jellybeans-ryan
 else
   set bg=dark
 end
