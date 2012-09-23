@@ -43,3 +43,18 @@ decorate_function() {
   }'
 }
 
+function f_array_join {
+  local a=(${!1})
+  local s=$2
+  local r=""
+
+  for (( i=0 ; i < ${#a[@]} ; i+=1 )) ; do
+    local join=$s
+    if (( i + 1 == ${#a[@]} )); then
+      join=""
+    fi
+    r="${r}${a[i]}${join}"
+  done
+
+  echo -n $r
+}
