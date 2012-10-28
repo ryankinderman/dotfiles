@@ -67,7 +67,7 @@ alias synergyd.stop='launchctl list  | grep synergyd | awk '\''{print $3}'\'' | 
 ###############################
 
 # Generate tmux configs that are dependent on the capabilities of the parent shell
-local_tmux_conf="$HOME/.tmux.conf.local"
+local_tmux_conf="$HOME/.tmux.conf.parent"
 if [ "$(tput colors)" == "256" ]; then
   cat <<EOS > $local_tmux_conf
 set-option -g default-terminal screen-256color
