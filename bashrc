@@ -59,6 +59,7 @@ else
 fi
 alias reload="source $HOME/.bash_profile"
 alias e='exit'
+alias less='less -R'
 alias mysqlsrv="sudo /Library/StartupItems/MySQLCOM/MySQLCOM"
 alias synergyd.stop='launchctl list  | grep synergyd | awk '\''{print $3}'\'' | xargs launchctl stop'
 
