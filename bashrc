@@ -64,6 +64,36 @@ alias mysqlsrv="sudo /Library/StartupItems/MySQLCOM/MySQLCOM"
 alias synergyd.stop='launchctl list  | grep synergyd | awk '\''{print $3}'\'' | xargs launchctl stop'
 
 ###############################
+# Terminal color support
+###############################
+
+if [ "$TERM" = "xterm" ] ; then
+  if [ -z "$COLORTERM" ] ; then
+    if [ -z "$XTERM_VERSION" ] ; then
+      echo "Warning: Terminal wrongly calling itself 'xterm'."
+    else
+      case "$XTERM_VERSION" in
+        "XTerm(256)") TERM="xterm-256color" ;;
+        "XTerm(88)") TERM="xterm-88color" ;;
+        "XTerm") ;;
+        *)
+            echo "Warning: Unrecognized XTERM_VERSION: $XTERM_VERSION"
+            ;;
+      esac
+    fi
+  else
+    case "$COLORTERM" in
+      gnome-terminal|Terminal)
+        TERM="gnome-256color" ;;
+      *)
+        echo "Warning: Unrecognized COLORTERM: $COLORTERM" ;;
+    esac
+  fi
+fi
+
+
+
+###############################
 # tmux
 ###############################
 
