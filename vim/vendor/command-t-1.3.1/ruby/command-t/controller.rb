@@ -1,4 +1,4 @@
-# Copyright 2010 Wincent Colaiuta. All rights reserved.
+# Copyright 2010-2011 Wincent Colaiuta. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -21,31 +21,39 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-require 'command-t/finder'
+require 'command-t/finder/buffer_finder'
+require 'command-t/finder/jump_finder'
+require 'command-t/finder/file_finder'
 require 'command-t/match_window'
 require 'command-t/prompt'
+require 'command-t/vim/path_utilities'
 
 module CommandT
   class Controller
+    include VIM::PathUtilities
+
     def initialize
       @prompt = Prompt.new
-      set_up_max_height
-      set_up_finder
     end
 
-    def show
+    def show_buffer_finder
+      @path          = VIM::pwd
+      @active_finder = buffer_finder
+      show
+    end
+
+    def show_jump_finder
+      @path          = VIM::pwd
+      @active_finder = jump_finder
+      show
+    end
+
+    def show_file_finder
       # optional parameter will be desired starting directory, or ""
-      @path           = File.expand_path(::VIM::evaluate('a:arg'), VIM::pwd)
-      @finder.path    = @path
-      @initial_window = $curwin
-      @initial_buffer = $curbuf
-      @match_window   = MatchWindow.new \
-        :prompt               => @prompt,
-        :match_window_at_top  => get_bool('g:CommandTMatchWindowAtTop')
-      @focus          = @prompt
-      @prompt.focus
-      register_for_key_presses
-      clear # clears prompt and lists matches
+      @path             = File.expand_path(::VIM::evaluate('a:arg'), VIM::pwd)
+      @active_finder    = file_finder
+      file_finder.path  = @path
+      show
     rescue Errno::ENOENT
       # probably a problem with the optional parameter
       @match_window.print_no_such_file_or_directory
@@ -65,8 +73,8 @@ module CommandT
     end
 
     def flush
-      set_up_max_height
-      set_up_finder
+      @max_height   = nil
+      @file_finder  = nil
     end
 
     def handle_key
@@ -148,17 +156,21 @@ module CommandT
 
   private
 
-    def set_up_max_height
-      @max_height = get_number('g:CommandTMaxHeight') || 0
+    def show
+      @initial_window   = $curwin
+      @initial_buffer   = $curbuf
+      @match_window     = MatchWindow.new \
+        :prompt               => @prompt,
+        :match_window_at_top  => get_bool('g:CommandTMatchWindowAtTop'),
+        :match_window_reverse => get_bool('g:CommandTMatchWindowReverse')
+      @focus            = @prompt
+      @prompt.focus
+      register_for_key_presses
+      clear # clears prompt and lists matches
     end
 
-    def set_up_finder
-      @finder = CommandT::Finder.new nil,
-        :max_files              => get_number('g:CommandTMaxFiles'),
-        :max_depth              => get_number('g:CommandTMaxDepth'),
-        :always_show_dot_files  => get_bool('g:CommandTAlwaysShowDotFiles'),
-        :never_show_dot_files   => get_bool('g:CommandTNeverShowDotFiles'),
-        :scan_dot_directories   => get_bool('g:CommandTScanDotDirectories')
+    def max_height
+      @max_height ||= get_number('g:CommandTMaxHeight') || 0
     end
 
     def exists? name
@@ -186,13 +198,6 @@ module CommandT
       else
         list_or_string.to_s
       end
-    end
-
-    def relative_path_under_working_directory path
-      # any path under the working directory will be specified as a relative
-      # path to improve the readability of the buffer list etc
-      pwd = File.expand_path(VIM::pwd) + '/'
-      path.index(pwd) == 0 ? path[pwd.length..-1] : path
     end
 
     # Backslash-escape space, \, |, %, #, "
@@ -295,13 +300,31 @@ module CommandT
     def match_limit
       limit = VIM::Screen.lines - 5
       limit = 1 if limit < 0
-      limit = [limit, @max_height].min if @max_height > 0
+      limit = [limit, max_height].min if max_height > 0
       limit
     end
 
     def list_matches
-      matches = @finder.sorted_matches_for @prompt.abbrev, :limit => match_limit
+      matches = @active_finder.sorted_matches_for @prompt.abbrev, :limit => match_limit
       @match_window.matches = matches
+    end
+
+    def buffer_finder
+      @buffer_finder ||= CommandT::BufferFinder.new
+    end
+
+    def file_finder
+      @file_finder ||= CommandT::FileFinder.new nil,
+        :max_depth              => get_number('g:CommandTMaxDepth'),
+        :max_files              => get_number('g:CommandTMaxFiles'),
+        :max_caches             => get_number('g:CommandTMaxCachedDirectories'),
+        :always_show_dot_files  => get_bool('g:CommandTAlwaysShowDotFiles'),
+        :never_show_dot_files   => get_bool('g:CommandTNeverShowDotFiles'),
+        :scan_dot_directories   => get_bool('g:CommandTScanDotDirectories')
+    end
+
+    def jump_finder
+      @jump_finder ||= CommandT::JumpFinder.new
     end
   end # class Controller
 end # module commandT

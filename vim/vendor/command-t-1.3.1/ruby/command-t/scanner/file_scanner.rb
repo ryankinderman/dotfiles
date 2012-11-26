@@ -1,4 +1,4 @@
-# Copyright 2010 Wincent Colaiuta. All rights reserved.
+# Copyright 2010-2011 Wincent Colaiuta. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -22,44 +22,52 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 require 'command-t/vim'
+require 'command-t/scanner'
 
 module CommandT
   # Reads the current directory recursively for the paths to all regular files.
-  class Scanner
+  class FileScanner < Scanner
     class FileLimitExceeded < ::RuntimeError; end
+    attr_accessor :path
 
     def initialize path = Dir.pwd, options = {}
+      @paths                = {}
+      @paths_keys           = []
       @path                 = path
       @max_depth            = options[:max_depth] || 15
       @max_files            = options[:max_files] || 10_000
+      @max_caches           = options[:max_caches] || 1
       @scan_dot_directories = options[:scan_dot_directories] || false
     end
 
     def paths
-      return @paths unless @paths.nil?
+      return @paths[@path] if @paths.has_key?(@path)
       begin
-        @paths = []
-        @depth = 0
-        @files = 0
-        @prefix_len = @path.chomp('/').length
-        add_paths_for_directory @path, @paths
+        ensure_cache_under_limit
+        @paths[@path] = []
+        @depth        = 0
+        @files        = 0
+        @prefix_len   = @path.chomp('/').length
+        add_paths_for_directory @path, @paths[@path]
       rescue FileLimitExceeded
       end
-      @paths
+      @paths[@path]
     end
 
     def flush
-      @paths = nil
-    end
-
-    def path= str
-      if @path != str
-        @path = str
-        flush
-      end
+      @paths = {}
     end
 
   private
+
+    def ensure_cache_under_limit
+      # Ruby 1.8 doesn't have an ordered hash, so use a separate stack to
+      # track and expire the oldest entry in the cache
+      if @max_caches > 0 && @paths_keys.length >= @max_caches
+        @paths.delete @paths_keys.shift
+      end
+      @paths_keys << @path
+    end
 
     def path_excluded? path
       # first strip common prefix (@path) from path to match VIM's behavior
@@ -89,5 +97,5 @@ module CommandT
     rescue Errno::EACCES
       # skip over directories for which we don't have access
     end
-  end # class Scanner
+  end # class FileScanner
 end # module CommandT

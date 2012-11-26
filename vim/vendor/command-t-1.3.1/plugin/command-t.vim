@@ -1,5 +1,5 @@
 " command-t.vim
-" Copyright 2010 Wincent Colaiuta. All rights reserved.
+" Copyright 2010-2011 Wincent Colaiuta. All rights reserved.
 "
 " Redistribution and use in source and binary forms, with or without
 " modification, are permitted provided that the following conditions are met:
@@ -27,11 +27,17 @@ if exists("g:command_t_loaded")
 endif
 let g:command_t_loaded = 1
 
-command -nargs=? -complete=dir CommandT call <SID>CommandTShow(<q-args>)
+command CommandTBuffer call <SID>CommandTShowBufferFinder()
+command CommandTJump call <SID>CommandTShowJumpFinder()
+command -nargs=? -complete=dir CommandT call <SID>CommandTShowFileFinder(<q-args>)
 command CommandTFlush call <SID>CommandTFlush()
 
 if !hasmapto(':CommandT<CR>')
-  silent! nmap <unique> <silent> <Leader>t :CommandT<CR>
+  silent! nnoremap <unique> <silent> <Leader>t :CommandT<CR>
+endif
+
+if !hasmapto(':CommandTBuffer<CR>')
+  silent! nnoremap <unique> <silent> <Leader>b :CommandTBuffer<CR>
 endif
 
 function s:CommandTRubyWarning()
@@ -41,9 +47,25 @@ function s:CommandTRubyWarning()
   echohl none
 endfunction
 
-function s:CommandTShow(arg)
+function s:CommandTShowBufferFinder()
   if has('ruby')
-    ruby $command_t.show
+    ruby $command_t.show_buffer_finder
+  else
+    call s:CommandTRubyWarning()
+  endif
+endfunction
+
+function s:CommandTShowFileFinder(arg)
+  if has('ruby')
+    ruby $command_t.show_file_finder
+  else
+    call s:CommandTRubyWarning()
+  endif
+endfunction
+
+function s:CommandTShowJumpFinder()
+  if has('ruby')
+    ruby $command_t.show_jump_finder
   else
     call s:CommandTRubyWarning()
   endif

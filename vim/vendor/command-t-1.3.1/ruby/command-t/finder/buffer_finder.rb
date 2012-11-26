@@ -1,4 +1,4 @@
-# Copyright 2010 Wincent Colaiuta. All rights reserved.
+# Copyright 2010-2011 Wincent Colaiuta. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -22,30 +22,14 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 require 'command-t/ext' # CommandT::Matcher
-require 'command-t/scanner'
+require 'command-t/scanner/buffer_scanner'
+require 'command-t/finder'
 
 module CommandT
-  # Encapsulates a Scanner instance (which builds up a list of available files
-  # in a directory) and a Matcher instance (which selects from that list based
-  # on a search string).
-  class Finder
-    def initialize path = Dir.pwd, options = {}
-      @scanner = Scanner.new path, options
-      @matcher = Matcher.new @scanner, options
+  class BufferFinder < Finder
+    def initialize
+      @scanner = BufferScanner.new
+      @matcher = Matcher.new @scanner, :always_show_dot_files => true
     end
-
-    # Options:
-    #   :limit (integer): limit the number of returned matches
-    def sorted_matches_for str, options = {}
-      @matcher.sorted_matches_for str, options
-    end
-
-    def flush
-      @scanner.flush
-    end
-
-    def path= path
-      @scanner.path = path
-    end
-  end # class Finder
+  end # class BufferFinder
 end # CommandT
