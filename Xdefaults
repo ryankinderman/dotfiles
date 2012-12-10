@@ -18,5 +18,5 @@ URxvt.color13: rgb:ff/9c/fe
 URxvt.color14: rgb:a4/ff/d6
 URxvt.color15: rgb:ff/ff/ff
 URxvt.font: xft:Liberation Mono:size=10:antialias=true:hinting=true
-URxvt.letterSpace: -1.5
+URxvt.letterSpace: -2
 URxvt.scrollBar: False
