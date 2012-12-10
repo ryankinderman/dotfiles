@@ -250,7 +250,7 @@ fun! s:rgb(rgb)
 endfun
 
 " sets the highlighting for the given group
-fun! s:X(group, fg, bg, attr, lcfg, lcbg)
+fun! s:X(group, fg, bg, attr, lcfg, lcbg, ...)
 	if s:low_color
 		let l:fge = empty(a:lcfg)
 		let l:bge = empty(a:lcbg)
@@ -265,13 +265,33 @@ fun! s:X(group, fg, bg, attr, lcfg, lcbg)
 	else
 		let l:fge = empty(a:fg)
 		let l:bge = empty(a:bg)
+    if !empty($DISPLAY) && exists("a:1") && has("unix") && !has("gui_running")
+      " Doing this because for some reason, X11 and/or the composite subsystem
+      " that handles transparency can't handle transparency on top of
+      " vim-specified colors. Not really sure where the root issue lies, so
+      " working around it here for now.
+      let l:unix_sans_gui_cbg = a:1
+      let l:cbg = l:unix_sans_gui_cbg
+      let l:cbge = empty(l:cbg)
+    else
+      let l:cbg = a:bg
+      let l:cbge = l:bge
+    end
 
 		if !l:fge && !l:bge
-			exec "hi ".a:group." guifg=#".a:fg." guibg=#".a:bg." ctermfg=".s:rgb(a:fg)." ctermbg=".s:rgb(a:bg)
+      if !l:cbge
+        exec "hi ".a:group." guifg=#".a:fg." guibg=#".a:bg." ctermfg=".s:rgb(a:fg)." ctermbg=".s:rgb(l:cbg)
+      else
+        exec "hi ".a:group." guifg=#".a:fg." guibg=#".a:bg." ctermfg=".s:rgb(a:fg)
+      end
 		elseif !l:fge && l:bge
 			exec "hi ".a:group." guifg=#".a:fg." guibg=NONE ctermfg=".s:rgb(a:fg)
 		elseif l:fge && !l:bge
-			exec "hi ".a:group." guifg=NONE guibg=#".a:bg." ctermbg=".s:rgb(a:bg)
+      if !l:cbge
+        exec "hi ".a:group." guifg=NONE guibg=#".a:bg." ctermbg=".s:rgb(l:cbg)
+      else
+        exec "hi ".a:group." guifg=NONE guibg=#".a:bg."
+      end
 		endif
 	endif
 
@@ -304,7 +324,7 @@ endif
 call s:X("Visual","","404040","","","")
 call s:X("Cursor","","b0d0f0","","","")
 
-call s:X("Normal","e8e8d3","151515","","White","")
+call s:X("Normal","e8e8d3","151515","","White","", "")
 call s:X("LineNr","605958","151515","none","Black","")
 call s:X("Comment","888888","","italic","Grey","")
 call s:X("Todo","808080","","bold","","")
