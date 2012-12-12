@@ -1,0 +1,2 @@
+#!/bin/bash
+/usr/bin/urxvt --perl-lib $HOME/.urxvt/ext:$HOME/.urxvt/ext/urxvt-perls

@@ -63,7 +63,6 @@ alias e='exit'
 alias less='less -R'
 alias mysqlsrv="sudo /Library/StartupItems/MySQLCOM/MySQLCOM"
 alias synergyd.stop='launchctl list  | grep synergyd | awk '\''{print $3}'\'' | xargs launchctl stop'
-alias urxvt="urxvt --perl-lib $HOME/.urxvt/ext:$HOME/.urxvt/ext/urxvt-perls"
 
 ###############################
 # Terminal color support
