@@ -20,3 +20,9 @@ URxvt.color15: rgb:ff/ff/ff
 URxvt.font: xft:Liberation Mono:size=10:antialias=true:hinting=true
 URxvt.letterSpace: -2
 URxvt.scrollBar: False
+URxvt.perl-ext-common: clipboard
+URxvt.keysym.M-c:   perl:clipboard:copy
+URxvt.keysym.M-v:   perl:clipboard:paste
+URxvt.keysym.M-C-v: perl:clipboard:paste_escaped
+URxvt.clipboard.copycmd:  xclip -i -selection clipboard
+URxvt.clipboard.pastecmd: xclip -o -selection clipboard
