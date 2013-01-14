@@ -220,13 +220,16 @@ let g:vimclojure#ParenRainbow=1
 
 " Copy/paste *****************************************************************
 
+let copy_cmd = ""
 if system("which pbcopy") != ""
   " On a Mac with pbcopy command
+  let copy_cmd = "pbcopy"
+elseif system("which xclip") != ""
+  let copy_cmd = "xclip -i -selection clipboard"
+end
 
-  " Copy the filename of the current buffer to the clipboard
-  command! CopyFilenameToClipboard :!echo "%:p" | pbcopy
-
-  function! PbCopy(type, ...)
+if copy_cmd != ""
+  function! CopyToWindowManagerClipboard(type, copy_cmd, ...)
     " This logic is mostly lifted from :help E775
     let sel_save = &selection
     let &selection = "inclusive"
@@ -244,14 +247,14 @@ if system("which pbcopy") != ""
       silent exe "normal! `[v`]y"
     end
 
-    call system("pbcopy", @@)
+    call system(a:copy_cmd, @@)
 
     let &selection = sel_save
     let @@ = reg_save
   endfunction
 
-  vmap <silent> Y :<C-U>call PbCopy(visualmode(), 1)<CR>
-  map <Leader>yy :call PbCopy("command")<CR>
+  vmap <silent> Y :<C-U>call CopyToWindowManagerClipboard(visualmode(), copy_cmd, 1)<CR>
+  map <Leader>yy :call CopyToWindowManagerClipboard("command", copy_cmd)<CR>
 end
 
 
