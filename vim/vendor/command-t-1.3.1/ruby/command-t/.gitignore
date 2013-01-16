@@ -1,2 +1,4 @@
+*.o
 ext.bundle
 ext.so
+mkmf.log
