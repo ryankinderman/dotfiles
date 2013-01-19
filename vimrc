@@ -26,7 +26,7 @@ else
   set backupdir=$HOME/.vim/backups,$HOME/.vimbackups,.
   set backupcopy=yes
 endif
-set dir=$HOME/.vim/swapfiles//,.
+set dir=$HOME/.vim/swapfiles//,.,~/tmp,/var/tmp,/tmp
 set history=50		" keep 50 lines of command line history
 set ruler		      " show the cursor position all the time
 set showcmd		    " display incomplete commands
