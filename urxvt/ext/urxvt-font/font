@@ -1,0 +1,101 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use List::Util qw(first);
+
+# On-the-fly urxvt font resizing.  Like ⌘{+,-}, on mac computers, just
+# way more complicated.
+#
+# Noah K. Tilton <noahktilton@gmail.com>
+#
+# What it does:
+#
+# 1) Emits escape sequences to change the font size in the running console;
+# 2) Persists the changed font size to xresources file.
+#
+# Note: For the time being, the Monaco font is treated as a special
+# case, due to Unicode compatibility issues.  Other fonts may need
+# special treatment, but I'm not using them.  In particular, Monaco only
+# supports unicode in certain pixel sizes.  9, 10, 12, 14 are embedded
+# bitmaps, which means (Except for 10) that they lack certain unicode
+# charmaps.
+#
+# Note: the regexes will only work on xft xrdb entries
+
+#   For this script to work, ~/.Xdefauls should probably contain at
+#   least the following:
+#
+#       urxvt*font
+#       urxvt*boldFont
+#       urxvt*boldColors: on
+#
+# References: man 3 urxvtperl
+#
+#  Debugging:   urxvt --perl-lib ${HOME}/.urxvt -pe font
+
+
+sub _resize_xft_string
+{
+  my ($self, $key, $delta)      = @_;
+  my ($resource)                = $self->{term}->resource($key);
+  my (@pieces)                  = split /:/, $resource;
+  my (@resized)                 = ();
+
+  foreach my $piece (@pieces)
+  {
+    # matching string
+    if ($piece =~ /size=(\d*)/)
+    {
+      my ($old_size)    =  $1;
+      my ($new_size)    =  $old_size;
+
+      $new_size += $delta;
+
+      $piece =~ s/size=$old_size/size=$new_size/;
+    }
+    push @resized, $piece;
+  }
+  return join (":", @resized);
+}
+
+sub change_size
+{
+  my ($self, $delta) = @_;
+
+  # Get xft strings with font size {+/-}1
+  my ($font_resized)                = $self->_resize_xft_string(           "font", $delta);
+  #my ($font_resized_im)             = $self->_resize_xft_string(         "imFont", $delta);
+  #my ($font_resized_bold)           = $self->_resize_xft_string(       "boldFont", $delta);
+  #my ($font_resized_italic)         = $self->_resize_xft_string(     "italicFont", $delta);
+  #my ($font_resized_bold_italic)    = $self->_resize_xft_string( "boldItalicFont", $delta);
+
+  # Update internal urxvt resource hash
+  #     This is necessary or else the next resize won't have an updated
+  #     value. "font" key is updated by urxvt when cmd_parse is called,
+  #     but boldFont is *not*, at least with the escape sequences I'm
+  #     emitting.
+  $self->{term}->resource(           "font", $font_resized);
+  #$self->{term}->resource(         "imFont", $font_resized_im);
+  #$self->{term}->resource(       "boldFont", $font_resized_bold);
+  #$self->{term}->resource(     "italicFont", $font_resized_italic);
+  #$self->{term}->resource( "boldItalicFont", $font_resized_bold_italic);
+
+  # Emit escape sequence to change fonts in rxvt runtime
+  $self->{term}->cmd_parse("\e]710;" . $font_resized . "\007");
+}
+
+sub on_user_command
+{
+  # This function is called whenever some urxvt.keysym.*: perl:x:y
+  # mapped in X_RESOURCES is called; where x is this "module" (file,
+  # translation unit...), y is some function in this file (and this
+  # function, if defined), and $cmd is the argument z.
+  #
+  my ($self, $cmd) = @_;
+
+  if ($cmd =~ /font:(..crement)/)   # {in, de, ex}
+  {
+    $self->change_size(($1 eq "increment") ? +1 : -1);
+  }
+}
