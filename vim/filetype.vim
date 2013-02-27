@@ -6,10 +6,9 @@ endif
 augroup filetypedetect
   au BufRead,BufNewFile *.feature setfiletype cucumber
   au BufRead,BufNewFile *.as setfiletype actionscript
-  "au BufRead,BufNewFile *.markdown,*.mkd setfiletype mkd
   au BufRead,BufNewFile Gemfile setfiletype ruby
   au BufRead,BufNewFile *.pdf.prawn setfiletype ruby
   au BufRead,BufNewFile *.wsdl setfiletype xml
   au BufRead,BufNewFile *.html.mustache setfiletype html
-  "au BufRead,BufNewFile *.md setfiletype markdown
+  au BufRead,BufNewFile *.json setfiletype javascript
 augroup END
