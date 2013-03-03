@@ -1,0 +1,214 @@
+#!/bin/bash -e
+#
+# Perform incremental backups using rsync and hard links.
+#
+# Usage:
+#
+#   $ sh backup.sh SOURCE=... BACKUP_HOST=... BACKUP_PATH=...
+#
+# Description:
+#
+#   The script will take an initial full backup of the SOURCE and store it in
+#   the BACKUP_PATH directory on the BACKUP_HOST machine. This will create a
+#   timestamp directory in BACKUP_PATH with format YYYY-MM-DDTHH:MM:SS that
+#   contains the SOURCE backup copy. A symlink named 'current' will also be
+#   created in BACKUP_PATH which will point to the timestamp directory.
+#   Subsequent backups will create a new timestamp directory and copy only
+#   the files that have changed from what is currently in the directory
+#   pointed to by 'current'; all other files will be hard-linked in the new
+#   timestamp directory from 'current'. Lastly, the 'current' symlink will
+#   be updated to point to the latest timestamp directory.
+#
+#   Note: This script uses rsync and ssh, and public/private keys must be
+#   configured between the SOURCE machine and the BACKUP_HOST machine for
+#   passwordless authentication.
+#
+# Parameters:
+#
+#   SOURCE    The source path to back up
+#   BACKUP_HOST
+#             The hostname or IP of the remote host to back up on
+#   BACKUP_PATH
+#             The path on BACKUP_HOST to store the backups
+#
+# Example:
+#
+#   Back up the /home/ryan directory on this machine to /mnt/backupdrive on the
+#   backupserver machine.
+#
+#   $ sh backup.sh SOURCE=/home/ryan BACKUP_HOST=backupserver BACKUP_PATH=/mnt/backupdrive
+#
+#   Note that this will create a directory named 'ryan' in /mnt/backupdrive on
+#   backupserver that mirrors the 'ryan' directory on this machine.
+#
+# Credits:
+#
+#   I got the idea for this script from:
+#     http://blog.interlinked.org/tutorials/rsync_time_machine.html
+#
+#   The author got the initial idea from:
+#     http://www.mikerubel.org/computers/rsync_snapshots/
+#
+set -o pipefail
+
+############################
+# Check for dependencies
+############################
+
+if [ "$(which arp)" == "" ]; then
+  echo "Must install \"arp\" command before making backups over a network. Try running the following and try again:" 1>&2
+  echo "  sudo apt-get install net-tools" 1>&2
+  exit 1
+fi
+
+if [ "$(which ping)" == "" ]; then
+  echo "Must install \"ping\" before making backups over a network. Try running the following and try again:" 1>&2
+  echo "  sudo apt-get install iputils-ping" 1>&2
+  exit 1
+fi
+
+
+###############################
+# Configuration
+###############################
+
+if [[ "$BACKUP_USER" == "" || "$BACKUP_HOST" == "" || "$BACKUP_PATH" == "" || "$SOURCE" == "" ]]; then
+  echo "Error: Required configuration not provided. Existing." 2>&1
+  exit 1
+fi
+
+DAYS_OF_INCREMENTAL_BACKUPS_TO_KEEP=14
+INCLUDES=(
+)
+EXCLUDES=(
+  "/dev/*"
+  "/proc/*"
+  "/sys/*"
+  "/tmp/*"
+  "/run/*"
+  "/mnt/*"
+  "/media/*"
+  "/lost+found"
+  "/home/*/.cache/chromium/*"
+  "/home/*/.mozilla/firefox/*.default/Cache/*"
+  "/home/*/.mozilla/firefox/*.default/thumbnails/*"
+  "/home/*/.thumbnails/*"
+  "/home/*/.xsession-errors"
+)
+
+declare -a excludes
+i=0
+for exclude in "${EXCLUDES[@]}"; do
+  excludes[$i]="--exclude=$exclude"
+  i=$(($i + 1))
+done
+declare -a includes
+i=0
+for include in "${INCLUDES[@]}"; do
+  includes[$i]="--include=$include"
+  i=$(($i + 1))
+done
+
+if [ "$BACKUP_USER" != "" ]; then
+  remote="$BACKUP_USER@$BACKUP_HOST"
+else
+  remote=$BACKUP_HOST
+fi
+
+
+#################################################
+# Check that expected backup host is available
+#################################################
+#
+# Since this script could be run automatically via a cron job, and because it could be run
+# on a host that changes networks frequently (like a laptop), it's important to have a way
+# to ensure that we're talking to the right backup host before actually attempting a
+# backup, to prevent hijacking attempts. To that end, this script can run in an (unsafe)
+# "configuration" mode if the CONFIGURE variable is set to true. This causes the script to
+# retrieve and cache information about the backup host for later use in verifying that
+# it's safe to attempt a backup to the host. When not running in "configuration" mode,
+# the script requires that the cached information about the backup host is already
+# available; if it's not, the script will exit with an error. When not running in
+# "configuration" mode, before performing a backup, the script will do the following:
+#
+# 1. Ping the backup host to see if it's available.
+# 2. Compare the MAC address of the backup host with the configured MAC address. If the
+#    MAC addresses match, the script continues; otherwise, the script stops. No errors are
+#    produced, since this is an frequently-expected occurrence with a laptop.
+# 3. (TODO for extra security) SSH into the backup host and compare a key shared between
+#    the backup and source hosts. If the two keys don't match, the script aborts and
+#    reports an error.
+
+if [ "$CONFIGURE" == "true" ]; then
+  set +e
+  ping_out=$(ping -c 1 $BACKUP_HOST 2>&1)
+  if (( $? != 0 )); then
+    echo "Error: $ping_out" 2>&1
+    echo "Unable to complete configuration. Exiting." 2>&1
+    exit 1
+  fi
+  set -e
+
+  arp $BACKUP_HOST | sed -n '2,$ p' | awk '{ print $3 }' > $HOME/.backup_data
+else
+  # Since we're not in configuration mode, read the backup host MAC from
+  # $HOME/.backup_data and compare with what's in the ARP cache and, if
+  # they match, continue with the backup; otherwise, abort.
+  set +e
+  ping_out=$(ping -c 1 $BACKUP_HOST 2>&1)
+  if (( $? != 0 )); then
+    echo "Error: $ping_out" 2>&1
+    echo "Unable to verify backup host. Exiting." 2>&1
+    exit 1
+  fi
+  set -e
+
+  backup_host_mac=$(arp $BACKUP_HOST | sed -n '2,$ p' | awk '{ print $3 }')
+fi
+
+
+################################
+# Perform incremental backup
+################################
+
+date=`date -u "+%Y-%m-%dT%H:%M:%S"`
+rsync -azPR $includes ${excludes[*]} --link-dest=$BACKUP_PATH/current $SOURCE $remote:$BACKUP_PATH/$date-incomplete
+ssh $remote "mv $BACKUP_PATH/$date-incomplete $BACKUP_PATH/$date && rm -f $BACKUP_PATH/current && ln -s $date $BACKUP_PATH/current"
+
+
+##############################
+# Clean up old backups
+##############################
+
+# Get list of backup directories, sorted by oldest first
+backed_up_dates=$(ssh $remote "ls -1d $BACKUP_PATH/[0-9]* | sed 's|$BACKUP_PATH/||'")
+
+declare -a to_delete
+i=0
+for backed_up_dir in $backed_up_dates; do
+  backed_up_date=$(echo $backed_up_dir | sed 's/\(.*\)-incomplete/\1/')
+  backed_up_date_seconds_from_epoch=$(date -u --date=$backed_up_date "+%s")
+  now_seconds_from_epoch=$(date -u --date=$date "+%s")
+  seconds_since_backup_created=$(($now_seconds_from_epoch - $backed_up_date_seconds_from_epoch))
+  days_since_backup_created=$(($seconds_since_backup_created / 60 / 60 / 24))
+
+  if (( $days_since_backup_created > $DAYS_OF_INCREMENTAL_BACKUPS_TO_KEEP )); then
+    to_delete[$i]=$backed_up_dir
+    i=$(($to_delete_i + 1))
+  else
+    # starting from oldest backup, so first failed check means we're done
+    break
+  fi
+done
+
+if (( ${#to_delete[@]} > 1 )); then
+  IFS=,
+  dirs_to_delete="{${to_delete[*]}}"
+  unset IFS
+else
+  dirs_to_delete="${to_delete[*]}"
+fi
+
+if [ "$dirs_to_delete" != "" ]; then
+  ssh $remote "rm -rf $BACKUP_PATH/$dirs_to_delete"
+fi
