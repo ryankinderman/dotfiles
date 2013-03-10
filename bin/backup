@@ -51,17 +51,44 @@
 #
 set -o pipefail
 
+declare -a log_levels=(
+  alert    # action must be taken immediately
+  crit     # critical conditions
+  error    # error conditions
+  warning  # warning conditions
+  notice   # normal, but significant, conditions
+  info     # informational message
+  debug    # debug-level message
+)
+log ()
+{
+  local level=$1
+  local message=$2
+  #if [[ -z "$level" ||  ]]; then
+  #  return 1
+  #fi
+  #logger -p user.$1 -t incremental-backup 
+}
+
+#exit
+
 ############################
 # Check for dependencies
 ############################
 
-if [ "$(which arp)" == "" ]; then
+if ! which logger > /dev/null; then
+  echo "Must install \"logger\" command before making backups over a network. Try running the following and try again:" 1>&2
+  echo "  sudo apt-get install bsdutils" 1>&2
+  exit 1
+fi
+
+if ! which arp > /dev/null; then
   echo "Must install \"arp\" command before making backups over a network. Try running the following and try again:" 1>&2
   echo "  sudo apt-get install net-tools" 1>&2
   exit 1
 fi
 
-if [ "$(which ping)" == "" ]; then
+if ! which ping > /dev/null; then
   echo "Must install \"ping\" before making backups over a network. Try running the following and try again:" 1>&2
   echo "  sudo apt-get install iputils-ping" 1>&2
   exit 1
