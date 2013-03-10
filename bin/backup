@@ -205,7 +205,7 @@ fi
 ################################
 
 date=`date -u "+%Y-%m-%dT%H:%M:%S"`
-rsync -azPR $includes ${excludes[*]} --link-dest=$BACKUP_PATH/current $SOURCE $remote:$BACKUP_PATH/$date-incomplete
+rsync -azPR $includes ${excludes[*]} --link-dest=$BACKUP_PATH/current --no-devices --no-specials $SOURCE $remote:$BACKUP_PATH/$date-incomplete
 ssh $remote "mv $BACKUP_PATH/$date-incomplete $BACKUP_PATH/$date && rm -f $BACKUP_PATH/current && ln -s $date $BACKUP_PATH/current"
 
 
