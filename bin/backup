@@ -184,13 +184,19 @@ else
   set +e
   ping_out=$(ping -c 1 $BACKUP_HOST 2>&1)
   if (( $? != 0 )); then
-    echo "Error: $ping_out" 2>&1
-    echo "Unable to verify backup host. Exiting." 2>&1
+    echo "Ping output: $ping_out" 2>&1
+    echo "Unable to verify backup host. Assuming that I'm not connected to the expected network. Existing." 2>&1
     exit 1
   fi
   set -e
 
   backup_host_mac=$(arp $BACKUP_HOST | sed -n '2,$ p' | awk '{ print $3 }')
+  recorded_backup_host_mac=$(cat $HOME/.backup_data)
+  if [ "$backup_host_mac" != "$recorded_backup_host_mac" ]; then
+    echo "Backup host has unexpected MAC address." 2>&1
+    echo "Assuming that I'm not connected to the expected network. Existing." 2>&1
+    exit 1
+  fi
 fi
 
 
