@@ -50,47 +50,53 @@
 #     http://www.mikerubel.org/computers/rsync_snapshots/
 #
 set -o pipefail
+PROGNAME=$(basename $0)
 
-declare -a log_levels=(
-  alert    # action must be taken immediately
-  crit     # critical conditions
-  error    # error conditions
-  warning  # warning conditions
-  notice   # normal, but significant, conditions
-  info     # informational message
-  debug    # debug-level message
-)
 log ()
 {
   local level=$1
   local message=$2
-  #if [[ -z "$level" ||  ]]; then
-  #  return 1
-  #fi
-  #logger -p user.$1 -t incremental-backup 
+  local app_name=$PROGNAME
+
+  if [[ -z "$level" || -z "$message" ]]; then
+    echo "$app_name: Must specify log level and message" 1>&2
+    exit 1
+  fi
+  if [ "$level" == "stderr" ]; then
+    echo "Error: $app_name: $message" 1>&2
+  fi
+
+  local fullmsg="<$level> $message"
+  set +e
+  local logger_output=$(logger -p user.$level -t $app_name "$fullmsg" 2>&1)
+  local status=$?
+  set -e
+  if (( $status != 0 )); then
+    level=err
+    logger -p user.$level -t $app_name "<$level> Error encountered while logging message: \"$logger_output\" ; Original message: \"$fullmsg\""
+  fi
 }
 
-#exit
 
 ############################
 # Check for dependencies
 ############################
 
 if ! which logger > /dev/null; then
-  echo "Must install \"logger\" command before making backups over a network. Try running the following and try again:" 1>&2
-  echo "  sudo apt-get install bsdutils" 1>&2
+  log stderr "Must install \"logger\" command before making backups over a network. Try running the following and try again:"
+  log stderr "  sudo apt-get install bsdutils"
   exit 1
 fi
 
 if ! which arp > /dev/null; then
-  echo "Must install \"arp\" command before making backups over a network. Try running the following and try again:" 1>&2
-  echo "  sudo apt-get install net-tools" 1>&2
+  log stderr "Must install \"arp\" command before making backups over a network. Try running the following and try again:"
+  log stderr "  sudo apt-get install net-tools"
   exit 1
 fi
 
 if ! which ping > /dev/null; then
-  echo "Must install \"ping\" before making backups over a network. Try running the following and try again:" 1>&2
-  echo "  sudo apt-get install iputils-ping" 1>&2
+  log stderr "Must install \"ping\" before making backups over a network. Try running the following and try again:"
+  log stderr "  sudo apt-get install iputils-ping"
   exit 1
 fi
 
@@ -100,7 +106,7 @@ fi
 ###############################
 
 if [[ "$BACKUP_USER" == "" || "$BACKUP_HOST" == "" || "$BACKUP_PATH" == "" || "$SOURCE" == "" ]]; then
-  echo "Error: Required configuration not provided. Existing." 2>&1
+  log stderr "Required configuration not provided. Exiting."
   exit 1
 fi
 
@@ -169,34 +175,40 @@ fi
 if [ "$CONFIGURE" == "true" ]; then
   set +e
   ping_out=$(ping -c 1 $BACKUP_HOST 2>&1)
-  if (( $? != 0 )); then
-    echo "Error: $ping_out" 2>&1
-    echo "Unable to complete configuration. Exiting." 2>&1
+  exit_status=$?
+  set -e
+  if (( $exit_status != 0 )); then
+    log stderr "Unable to complete configuration. Exiting. (ping output: $ping_out)"
     exit 1
   fi
-  set -e
 
-  arp $BACKUP_HOST | sed -n '2,$ p' | awk '{ print $3 }' > $HOME/.backup_data
+  set +e
+  arp_out=$( (arp $BACKUP_HOST | sed -n '2,$ p' | awk '{ print $3 }' > $HOME/.backup_data) 2>&1 )
+  exit_status=$?
+  set -e
+  if (( $exit_status != 0 )); then
+    log stderr "Unable to complete configuration. Exiting. (arp output: $arp_out)"
+    exit 1
+  fi
 else
-  # Since we're not in configuration mode, read the backup host MAC from
-  # $HOME/.backup_data and compare with what's in the ARP cache and, if
-  # they match, continue with the backup; otherwise, abort.
   set +e
   ping_out=$(ping -c 1 $BACKUP_HOST 2>&1)
-  if (( $? != 0 )); then
-    echo "Ping output: $ping_out" 2>&1
-    echo "Unable to verify backup host. Assuming that I'm not connected to the expected network. Existing." 2>&1
-    exit 1
-  fi
+  exit_status=$?
   set -e
-
-  backup_host_mac=$(arp $BACKUP_HOST | sed -n '2,$ p' | awk '{ print $3 }')
-  recorded_backup_host_mac=$(cat $HOME/.backup_data)
-  if [ "$backup_host_mac" != "$recorded_backup_host_mac" ]; then
-    echo "Backup host has unexpected MAC address." 2>&1
-    echo "Assuming that I'm not connected to the expected network. Existing." 2>&1
+  if (( $exit_status != 0 )); then
+    log info "Unable to verify backup host. Assuming that I'm not connected to the expected network. Exiting. (ping output: $ping_out)"
     exit 1
   fi
+fi
+
+# Read the backup host MAC from $HOME/.backup_data and compare with what's in
+# the ARP cache and, if they match, continue with the backup; otherwise,
+# abort.
+backup_host_mac=$(arp $BACKUP_HOST | sed -n '2,$ p' | awk '{ print $3 }')
+recorded_backup_host_mac=$(cat $HOME/.backup_data)
+if [ "$backup_host_mac" != "$recorded_backup_host_mac" ]; then
+  log info "Backup host has unexpected MAC address. Assuming that I'm not connected to the expected network. Exiting."
+  exit 1
 fi
 
 
