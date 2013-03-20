@@ -176,7 +176,6 @@ function! PreviewMKD()
 endfunction
 autocmd FileType markdown map <buffer> <Leader>p :call PreviewMKD()<CR>
 autocmd FileType markdown call WordWrap("on")
-autocmd FileType markdown setlocal spell
 
 
 " Folding *********************************************************************
