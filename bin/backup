@@ -51,6 +51,16 @@
 #
 set -o pipefail
 PROGNAME=$(basename $0)
+# Note: The following line redirects stderr of this process to the
+# stdin of tee through the FIFO created between this process and the
+# process running tee. The tee process will send its input to the
+# specified file in addition to stdout, which we redirect back to
+# stderr. This has the effect of causing the stderr of this script
+# to continue to be sent to stderr *and* also be written to the log
+# file. This is useful for getting the stderr of the last command
+# that caused the script to fail from the log file if it was
+# unhandled.
+exec 2> >(tee /tmp/$PROGNAME.stderr.log >&2)
 
 log ()
 {
@@ -77,6 +87,15 @@ log ()
     logger -p user.$level -t $app_name "<$level> Error encountered while logging message: \"$logger_output\" ; Original message: \"$fullmsg\""
   fi
 }
+
+log_trapped_error()
+{
+  local line="$1"
+  log err "Error on or near line $line"
+  exit $code
+}
+
+trap 'log_trapped_error $LINENO' ERR
 
 
 ############################
