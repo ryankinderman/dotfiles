@@ -64,6 +64,7 @@ log ()
   fi
   if [ "$level" == "stderr" ]; then
     echo "Error: $app_name: $message" 1>&2
+    return
   fi
 
   local fullmsg="<$level> $message"
