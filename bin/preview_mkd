@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'rdiscount'
+
+raw_markdown_text = File.read(ARGV[0])
+markdown_text = raw_markdown_text.split("\n").inject([]) do |a, line|
+  unless a.empty? and !(line =~ /^\w+:/).nil?
+    a << line
+  end
+  a
+end.join("\n")
+
+temp_dir = "#{ENV["HOME"]}/tmp"
+unless File.directory?(temp_dir)
+  raise "Could not create #{temp_dir}" unless system("mkdir #{temp_dir}")
+end
+
+file = File.new(html_file = "#{temp_dir}/preview_mkd.html", "w")
+begin
+  markdown = RDiscount.new(markdown_text)
+  file << markdown.to_html
+  file.close
+  system("open #{html_file}")
+ensure
+  file.close unless file.closed?
+end
