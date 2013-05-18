@@ -234,7 +234,9 @@ if copy_cmd != ""
     let &selection = "inclusive"
     let reg_save = @@
 
-    if a:0  " Invoked from Visual mode, use '< and '> marks.
+    if a:type == "range"
+      let @@ = join(getline(a:1,a:2), "\n")
+    elseif a:0  " Invoked from Visual mode, use '< and '> marks.
       silent exe "normal! `<" . a:type . "`>y"
     elseif a:type == "command"
       let @@ = getline(".")
@@ -254,6 +256,7 @@ if copy_cmd != ""
 
   vmap <silent> Y :<C-U>call CopyToWindowManagerClipboard(visualmode(), copy_cmd, 1)<CR>
   map <Leader>yy :call CopyToWindowManagerClipboard("command", copy_cmd)<CR>
+  com! -range Y call CopyToWindowManagerClipboard("range",copy_cmd,<line1>,<line2>)
 end
 
 
