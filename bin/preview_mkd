@@ -20,7 +20,14 @@ begin
   markdown = RDiscount.new(markdown_text)
   file << markdown.to_html
   file.close
-  system("open #{html_file}")
+  if RUBY_PLATFORM =~ /darwin/
+    system("open #{html_file}")
+  elsif RUBY_PLATFORM =~ /linux/
+    system("firefox #{html_file} &")
+  else
+    puts "*** Unrecognized platform: #{RUBY_PLATFORM}. Unsure about how to open the generated HTML file for you to see."
+    puts "*** You can manually open the file, which is located at #{html_file.inspect}"
+  end
 ensure
   file.close unless file.closed?
 end
