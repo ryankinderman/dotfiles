@@ -1,0 +1,11 @@
+#!/usr/bin/env bash -e
+# This fixes the issue of occasionally being unable to connect to an Airport Express from iTunes
+[[ $(uname) != "Darwin" ]] && echo "Only intended for running on OSX; doing nothing." && exit 1
+
+IFS=$'\n'
+services=( $(networksetup -listnetworkserviceorder | grep "^(\d.*Ethernet" | sed 's/^([[:digit:]]\{1,\}) *//') )
+
+for service in ${services[@]} ; do
+  echo "Disabling IPv6 for service \"$service\""
+  sudo networksetup -setv6off "$service"
+done
