@@ -60,7 +60,8 @@ PROGNAME=$(basename $0)
 # file. This is useful for getting the stderr of the last command
 # that caused the script to fail from the log file if it was
 # unhandled.
-exec 2> >(tee /tmp/$PROGNAME.stderr.log >&2)
+err_log_path="/tmp/$PROGNAME.stderr.log"
+exec 2> >(tee "$err_log_path" >&2)
 
 log ()
 {
@@ -91,7 +92,8 @@ log ()
 log_trapped_error()
 {
   local line="$1"
-  log err "Error on or near line $line"
+  local errormsg="$(cat $err_log_path)"
+  log err "Error on or near line $line: $errormsg"
   exit $code
 }
 
