@@ -61,7 +61,7 @@ PROGNAME=$(basename $0)
 # that caused the script to fail from the log file if it was
 # unhandled.
 #
-# God idea for this from http://phaq.phunsites.net/2010/11/22/trap-errors-exit-codes-and-line-numbers-within-a-bash-script/
+# Got idea for this from http://phaq.phunsites.net/2010/11/22/trap-errors-exit-codes-and-line-numbers-within-a-bash-script/
 err_log_path="/tmp/$PROGNAME.stderr.log"
 exec 2> >(tee "$err_log_path" >&2)
 
