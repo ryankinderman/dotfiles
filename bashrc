@@ -1,4 +1,13 @@
 #!/bin/bash
+########################################################################
+# To properly integrate with dotfiles, add this to the top of your
+# $HOME/.bashrc:
+#
+#   source $DOTFILES/bashrc
+
+# Then, place any machine-specific non-login settings in $HOME/.bashrc.
+########################################################################
+
 source $DOTFILES/bash/utils.bash
 
 in_login_shell() {
@@ -24,7 +33,7 @@ fi
 PS1="\h:\u \W\$(parse_git_branch)\$ "
 
 PATH=$ORIGINAL_PATH
-export PATH=$HOME/bin:$DOTFILES/bin:$HOME/installs/bin:$HOME/bin/wireshark:$HOME/bin/flex/bin:/usr/local/texlive/2008/bin/universal-darwin:/opt/local/bin:/usr/local/mysql/bin:$HOME/.gem/ruby/1.8/bin:$ORIGINAL_PATH
+export PATH=$HOME/bin:$DOTFILES/bin:$HOME/installs/bin:$HOME/bin/wireshark:$HOME/bin/flex/bin:/usr/local/texlive/2008/bin/universal-darwin:/opt/local/bin:/usr/local/mysql/bin:$HOME/.gem/ruby/1.8/bin:$HOME/.rvm/bin:$ORIGINAL_PATH
 export MANPATH=/opt/local/man:$MANPATH
 export EDITOR=vim
 
@@ -35,15 +44,6 @@ elif [ -f /etc/bash_completion ]; then
 fi
 
 if [[ -s "$DOTFILES/bash/git-completion.bash" ]] ; then source "$DOTFILES/bash/git-completion.bash" ; fi
-
-if [[ -s "$HOME/.rvm/scripts/rvm" ]] ; then
-  if [[ "$(which rvm)" != "" ]]; then
-    rvm reload
-  else
-    source "$HOME/.rvm/scripts/rvm"
-    rvm use default
-  fi
-fi
 
 platform='unknown'
 if [[ "${OSTYPE:0:5}" == 'linux' ]]; then
