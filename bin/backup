@@ -231,7 +231,7 @@ fi
 backup_host_mac=$(arp $BACKUP_HOST | sed -n '2,$ p' | awk '{ print $3 }')
 recorded_backup_host_mac=$(cat $HOME/.backup_data)
 if [ "$backup_host_mac" != "$recorded_backup_host_mac" ]; then
-  log info "Backup host has unexpected MAC address. Assuming that I'm not connected to the expected network. Exiting."
+  log info "Backup host has unexpected MAC address: \"$backup_host_mac\". Assuming that I'm not connected to the expected network. Exiting."
   exit 1
 fi
 
