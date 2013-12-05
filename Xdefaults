@@ -1,3 +1,35 @@
+XTerm.customization: -color
+XTerm.termName: xterm-256color
+XTerm.metaSendsEscape: true
+XTerm.saveLines: 0
+XTerm.faceName: Liberation Mono:size=10:antialias=false
+XTerm.font: 7x13
+XTerm.VT100.translations: #override \
+  Shift <Key>Up:              scroll-back(1) \n\
+  Shift <Key>Down:            scroll-forw(1) \n\
+  ~Meta Shift Ctrl <Key>V:    insert-selection(CLIPBOARD) \n\
+   Meta Shift Ctrl <Key>V:    insert-selection(PRIMARY) \n\
+  ~Shift <Btn1Up>:            select-end(PRIMARY, CUT_BUFFER0) \n\
+   Shift <Btn1Up>:            select-end(CLIPBOARD, CUT_BUFFER1) \n\
+  ~Shift ~Ctrl ~Meta <Btn2Up>:insert-selection(PRIMARY, CUT_BUFFER0) \n\
+   Shift ~Ctrl ~Meta <Btn2Up>:insert-selection(CLIPBOARD, CUT_BUFFER1)
+XTerm.color0: rgb:4f/4f/4f
+XTerm.color1: rgb:fa/34/26
+XTerm.color2: rgb:8e/ff/00
+XTerm.color3: rgb:ff/ff/49
+XTerm.color4: rgb:54/9d/ff
+XTerm.color5: rgb:ff/73/fd
+XTerm.color6: rgb:7a/ff/cd
+XTerm.color7: rgb:ee/ee/ee
+XTerm.color8: rgb:7c/7c/7c
+XTerm.color9: rgb:fb/6d/62
+XTerm.color10: rgb:ac/ff/56
+XTerm.color11: rgb:ff/ff/95
+XTerm.color12: rgb:7c/b9/ff
+XTerm.color13: rgb:ff/9c/fe
+XTerm.color14: rgb:a4/ff/d6
+XTerm.color15: rgb:ff/ff/ff
+
 URxvt.depth: 32
 URxvt.background: rgba:0000/0000/0000/dccc
 URxvt.foreground: rgb:bb/bb/bb
