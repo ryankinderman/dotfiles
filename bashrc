@@ -76,7 +76,7 @@ if [ "$TERM" = "xterm" ] ; then
       echo "Warning: Terminal wrongly calling itself 'xterm'."
     else
       case "$XTERM_VERSION" in
-        "XTerm(256)") TERM="xterm-256color" ;;
+        "XTerm(256)" | "XTerm(278)") TERM="xterm-256color" ;;
         "XTerm(88)") TERM="xterm-88color" ;;
         "XTerm") ;;
         *)
