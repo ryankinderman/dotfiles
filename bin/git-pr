@@ -1,0 +1,11 @@
+#!/bin/bash
+remote=$1
+pr=$2
+usage="usage: $(basename $0) <remote> <pull request #>"
+
+if [[ "$remote" == "" ]] || [[ "$pr" == "" ]]; then
+  echo $usage
+  exit 1
+fi
+
+git fetch $remote refs/pull/$pr/head:pr/$pr
