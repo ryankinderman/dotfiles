@@ -1,0 +1,24 @@
+#!/bin/bash
+#
+# This script updates the "screen-256color" terminfo db so that the "standout
+# mode" is set to use reverse video. If the command isn't run w/sudo, it will
+# write its output to the $HOME/.terminfo directory; if run with sudo, it will
+# write to /etc/terminfo (see tic(1) manpage for more details).
+#
+# Background:
+#
+# Occasionally, the ncurses-base package is updated, which could change
+# /lib/terminfo/s/screen-256color, the terminfo database that tmux uses.  When
+# this has happened in the past on Ubuntu, the "standout mode" changes to use
+# the hard-to-see italics display form.  The "standout mode" terminal
+# capability is used for highlighting text when, for example, you search for
+# something in "less".  My preferred effect for standout is reverse video
+# instead of italics.  I'm not sure, but I think reverse video is the typical
+# effect in other terminfo dbs as well.
+
+if [[ "$TERM" != "screen-256color" ]]; then
+  echo "Unrecognized terminal type: $TERM"
+  exit 1
+fi
+
+infocmp $TERM | sed 's/smso=[^,]\{1,\}/smso=\\E[7m/; s/rmso=[^,]\{1,\}/rmso=\\E[27m/' | tic -
