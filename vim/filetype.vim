@@ -4,6 +4,7 @@ if exists("did_load_filetypes")
   finish
 endif
 augroup filetypedetect
+  au BufRead,BufNewFile *.cljx setfiletype clojure
   au BufRead,BufNewFile *.feature setfiletype cucumber
   au BufRead,BufNewFile *.as setfiletype actionscript
   au BufRead,BufNewFile Gemfile setfiletype ruby
