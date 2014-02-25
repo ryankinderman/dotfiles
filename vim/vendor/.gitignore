@@ -1,2 +1,4 @@
+command-t-1.6.1/ruby/command-t/Makefile
+command-t-1.6.1/ruby/command-t/*.log
 command-t-1.6.1/ruby/command-t/*.o
 command-t-1.6.1/ruby/command-t/*.so
