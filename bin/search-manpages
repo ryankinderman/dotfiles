@@ -1,0 +1,2 @@
+#!/bin/bash
+man -a -K -i --regex $1
