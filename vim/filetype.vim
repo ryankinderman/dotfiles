@@ -11,4 +11,5 @@ augroup filetypedetect
   au BufRead,BufNewFile *.wsdl setfiletype xml
   au BufRead,BufNewFile *.html.mustache setfiletype html
   au BufRead,BufNewFile *.json setfiletype javascript
+  au BufRead,BufNewFile *.txt setfiletype text
 augroup END
