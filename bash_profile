@@ -14,3 +14,20 @@
 # Then, place any machine-specific settings login settings in
 # $HOME/.bash_profile
 #######################################################################
+
+# Reattach to a screen session if it's running and not already attached
+function f_rescreen {
+  if [ "$(screen -ls | grep Attached)" == "" ]; then
+    screen -aAdR
+  fi
+}
+alias rescreen="f_rescreen"
+
+# Reattach to a known tmux session if it's running and not already attached
+function f_retmux {
+  local session_name=persist
+  if tmux has-session -t $session_name && [[ "$(tmux list-clients -t $session_name -F '#{?session_attached,attached,}')" != "attached" ]]; then
+    tmux attach-session -t $session_name
+  fi
+}
+alias retmux="f_retmux"
