@@ -337,13 +337,3 @@ function! FListColorSchemes()
   ":<C-U>
 endfunction
 command! ListColorSchemes call FListColorSchemes()
-
-
-" Projects *******************************************************************
-function! ConfigureForMMH()
-  set tags=./tags,$MMH_HOME/tags,$MMH_ROOT/stable/tags,$MMH_ROOT/indexer/tags,$MMH_ROOT/jdk_tags,$HOME/tags,tags
-endfunction
-com! Mmh call ConfigureForMMH()
-
-
-" Java ***********************************************************************
