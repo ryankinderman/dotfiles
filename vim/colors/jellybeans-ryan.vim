@@ -265,7 +265,7 @@ fun! s:X(group, fg, bg, attr, lcfg, lcbg, ...)
 	else
 		let l:fge = empty(a:fg)
 		let l:bge = empty(a:bg)
-    if !empty($DISPLAY) && exists("a:1") && has("unix") && !has("gui_running")
+    if !(empty($DISPLAY) && (empty($LC_IN_X) || $LC_IN_X == "false")) && exists("a:1") && has("unix") && !has("gui_running")
       " Doing this because for some reason, X11 and/or the composite subsystem
       " that handles transparency can't handle transparency on top of
       " vim-specified colors. Not really sure where the root issue lies, so
