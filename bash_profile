@@ -26,8 +26,12 @@ alias rescreen="f_rescreen"
 # Reattach to a known tmux session if it's running and not already attached
 function f_retmux {
   local session_name=persist
-  if tmux has-session -t $session_name && [[ "$(tmux list-clients -t $session_name -F '#{?session_attached,attached,}')" != "attached" ]]; then
+  local has_session=$(tmux has-session -t $session_name >/dev/null 2>&1)$?
+
+  if [[ $has_session == 0 && "$(tmux list-clients -t $session_name -F '#{?session_attached,attached,}')" != "attached" ]]; then
     tmux attach-session -t $session_name
+  elif [[ $has_session != 0 ]]; then
+    tmux new-session -s $session_name
   fi
 }
 alias retmux="f_retmux"
