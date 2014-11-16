@@ -8,6 +8,11 @@
 # Then, place any machine-specific non-login settings in $HOME/.bashrc.
 ########################################################################
 
+if [ -z "${DOTFILES+x}" ]; then
+  echo "${BASH_SOURCE[0]}: The DOTFILES environment variable must be defined before sourcing this file." 2>&1
+  return
+fi
+
 source $DOTFILES/bash/utils.bash
 
 in_login_shell() {
