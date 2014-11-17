@@ -25,7 +25,7 @@ alias rescreen="f_rescreen"
 
 # Reattach to a known tmux session if it's running and not already attached
 function f_retmux {
-  [ -z "${TMUX+x}" ] && return
+  [ ! -z "${TMUX+x}" ] && return
 
   local session_name=persist
   local has_session=$(tmux has-session -t $session_name >/dev/null 2>&1)$?
