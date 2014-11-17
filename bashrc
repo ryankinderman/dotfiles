@@ -4,7 +4,7 @@
 # $HOME/.bashrc:
 #
 #   source $DOTFILES/bashrc
-
+#
 # Then, place any machine-specific non-login settings in $HOME/.bashrc.
 ########################################################################
 
