@@ -31,13 +31,14 @@ if [[ $- != *i* ]] ; then
   return
 fi
 
-if [ "$ORIGINAL_PATH" = "" ]; then
-   export ORIGINAL_PATH=$PATH
-fi
-
 PS1="\h:\u \W\$(parse_git_branch)\$ "
 
+# Prevent PATH from having duplicate entries upon re-sourcing this file
+if [ -z "${ORIGINAL_PATH+x}" ]; then
+   export ORIGINAL_PATH=$PATH
+fi
 PATH=$ORIGINAL_PATH
+
 export PATH=$HOME/bin:$DOTFILES/bin:$HOME/installs/bin:$HOME/bin/wireshark:$HOME/bin/flex/bin:/usr/local/texlive/2008/bin/universal-darwin:/opt/local/bin:/usr/local/mysql/bin:$HOME/.gem/ruby/1.8/bin:$ORIGINAL_PATH
 export MANPATH=/opt/local/man:$MANPATH
 export EDITOR=vim
