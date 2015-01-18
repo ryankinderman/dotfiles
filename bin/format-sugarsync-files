@@ -1,0 +1,13 @@
+#!/bin/bash
+# SugarSync does not handle filenames with forward-slashes or colons in them,
+# so this script strips those characters off of filenames.
+find "$1" -type f -name "*:*" |
+  awk '{
+    s=$0;
+    n=match(s, /\/[^\/]*$/);
+    ps=substr(s, n+1);
+    pp=substr(s, 1, n);
+    gsub(/:/, "_", ps);
+    print "\"" $0 "\"", "\"" pp ps "\""
+  }' |
+  xargs -t -L 1 mv
