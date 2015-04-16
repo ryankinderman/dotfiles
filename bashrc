@@ -69,6 +69,7 @@ alias reload="source $HOME/.bash_profile"
 alias vim="vim -u $HOME/.vimrc" # needed so that a global vimrc file doesn't mess with config loading
 alias e='exit'
 alias less='less -R'
+alias pse='ps -ewwo user,pid,ppid,%cpu,%mem,vsz,rss,tty,stat,start,time,command'
 alias mysqlsrv="sudo /Library/StartupItems/MySQLCOM/MySQLCOM"
 alias synergyd.stop='launchctl list  | grep synergyd | awk '\''{print $3}'\'' | xargs launchctl stop'
 
