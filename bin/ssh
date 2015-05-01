@@ -2,13 +2,20 @@
 # Indicate to the remote shell environment that the client is launched from within X
 
 script_path=${BASH_SOURCE[0]}
+ssh_commands=($(which -a ssh))
 
-real_ssh=$(which -a ssh | grep -v $script_path | head -n1)
+for (( i=0; i < ${#ssh_commands[@]}; i=$i+1 )); do
+  if [[ "${ssh_commands[$i]}" == $script_path ]]; then
+    break
+  fi
+done
 
-if [[ -z "$real_ssh" ]]; then
+if [[ $((i+1)) -eq ${#ssh_commands[@]} ]]; then
   echo "Could not find an ssh command other than this one (${BASH_SOURCE[0]}); exiting" 1>&2
   exit 1
 fi
+
+real_ssh=${ssh_commands[$((i+1))]}
 
 export LC_IN_X=$(if [ -n "${DISPLAY+x}" ]; then echo "true"; else echo "false"; fi)
 $real_ssh -o SendEnv=LC_IN_X $*
