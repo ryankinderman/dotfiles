@@ -15,4 +15,8 @@ if [[ $# -eq 0 ]]; then
   exit 1
 fi
 
-git diff $(git merge-base HEAD $1)..HEAD
+args=( "$@" ) # convert command args to array
+base_commit=${args[-1]}
+unset args[-1]
+
+git diff ${args[*]} $(git merge-base HEAD $base_commit)..HEAD
