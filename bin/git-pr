@@ -3,7 +3,9 @@ if [ "$#" -eq 2 ]; then
   remote=$1
   pr=$2
 
+  git checkout --detach
   git fetch $remote refs/pull/$pr/head:pr/$pr
+  git checkout pr/$pr
 elif [ "$#" -eq 3 ]; then
   remote=$1
   command=$2
