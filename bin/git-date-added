@@ -1,0 +1,5 @@
+#!/bin/bash -e
+#
+# Takes a file path and sends the date it was added to the repository to stdout
+
+git log --pretty=format:%ci --diff-filter=A "$1"
