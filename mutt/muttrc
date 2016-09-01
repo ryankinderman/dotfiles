@@ -1,0 +1,18 @@
+set ssl_starttls=yes
+set ssl_force_tls=yes
+set imap_user = 'ryan@kinderman.net'
+set from='ryan@kinderman.net'
+set realname='Ryan Kinderman'
+set folder = imaps://imap.gmail.com/
+set spoolfile = imaps://imap.gmail.com/INBOX
+set postponed="imaps://imap.gmail.com/[Gmail]/Drafts"
+set header_cache = "~/.mutt/cache/headers"
+set message_cachedir = "~/.mutt/cache/bodies"
+set certificate_file = "~/.mutt/certificates"
+set smtp_url = 'smtps://ryan@kinderman.net@smtp.gmail.com:465'
+set move = no
+set imap_keepalive = 900
+#set sort = 'reverse-date'
+set sort = 'reverse-threads'
+
+source $HOME/.mutt/colors/aperiodic
