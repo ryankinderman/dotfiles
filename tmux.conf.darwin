@@ -1,4 +1,5 @@
 source-file $DOTFILES/tmux.conf
+source-file $DOTFILES/tmux.conf.19
 
 # Needed to use tools like pbcopy. See $DOTFILES/tmux/reattach-to-user-namespace for details.
 set-option -g default-command "reattach-to-user-namespace -l $SHELL"
