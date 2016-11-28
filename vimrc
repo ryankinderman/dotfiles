@@ -1,3 +1,7 @@
+" Prevent loading of logipat plugin, since it overrides netrw's :E and I never
+" use logipat
+let loaded_logipat = v:true
+
 " Add all directories under $DOTFILES/vim/vendor as runtime paths, so plugins,
 " docs, colors, and other runtime files are loaded.
 let vendorpaths = globpath("$DOTFILES/vim", "vendor/*")

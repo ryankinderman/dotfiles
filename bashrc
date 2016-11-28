@@ -94,7 +94,7 @@ if [ "$TERM" = "xterm" ] ; then
   else
     case "$COLORTERM" in
       gnome-terminal|Terminal|xfce4-terminal)
-        TERM="gnome-256color" ;;
+        TERM="xterm-256color" ;;
       *)
         echo "Warning: Unrecognized COLORTERM: $COLORTERM" ;;
     esac
