@@ -1,0 +1,86 @@
+#!/usr/bin/env ruby
+#
+# DESCRIPTION:
+#
+#   This is a little script to verify whether some subset of a given set of
+#   individual dollar amounts sums up to a given amount.
+#
+# BACKGROUND:
+#
+#   I categorize all credit card transactions for budgeting purposes.  I need
+#   this script when I'm categorizing transactions from Amazon, because there
+#   is no direct way to map a charge from them to a particular combination of
+#   shipments on an invoice.
+#
+
+def fine_subset_recursive(charge, shipment_amounts, start, length, sum)
+  if charge == sum
+    shipment_amounts[start..start + length - 1]
+  elsif sum > charge || start + length == shipment_amounts.size
+    nil
+  else
+    result = nil
+
+    if length == 0
+      while result.nil? && start < shipment_amounts.size
+        result = find_subset(charge, shipment_amounts, start, length + 1, sum + shipment_amounts[start + length])
+        start += 1 if result.nil?
+      end
+    else
+      result = find_subset(charge, shipment_amounts, start, length + 1, sum + shipment_amounts[start + length])
+    end
+
+    result
+  end
+end
+
+def find_subset(charge, shipment_amounts, start = 0, length = 0, sum = 0)
+  return [] if charge == 0
+
+  fine_subset_recursive(charge, shipment_amounts.sort, start, length, sum)
+end
+
+def run
+  charge = ARGV[0].to_f
+  shipment_amounts = ARGV[1].split(",").map { |a| a.to_f }
+
+  amounts = find_subset(charge, shipment_amounts)
+
+  if amounts.nil?
+    puts "Unable to find a subset of shipment amounts that sum up to the given charge."
+  else
+    p amounts
+  end
+end
+
+if ARGV[0] == "test"
+  def assert(pred, message = "")
+    raise message unless pred
+  end
+
+  def assert_equal(expected, actual)
+    assert(
+      expected == actual,
+      "Expected #{actual.inspect} to equal #{expected.inspect}, but it didn't"
+    )
+  end
+
+  def pass
+    puts "Tests pass!"
+  end
+
+  def test
+    assert_equal nil, find_subset(3, [5])
+    assert_equal [], find_subset(0, [1, 2, 3, 4])
+    assert_equal [3], find_subset(3, [3])
+    assert_equal [3, 7, 10], find_subset(20, [3, 7, 10])
+    assert_equal [3, 7, 10], find_subset(20, [1, 2, 3, 7, 10, 15])
+    assert_equal [3, 7, 10], find_subset(20, [1, 2, 3, 7, 15, 10])
+
+    pass
+  end
+
+  test
+else
+  run
+end
