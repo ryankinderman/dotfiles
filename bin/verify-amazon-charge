@@ -13,7 +13,7 @@
 #   shipments on an invoice.
 #
 
-def fine_subset_recursive(charge, shipment_amounts, start, length, sum)
+def find_subset_recursive(charge, shipment_amounts, start, length, sum)
   if charge == sum
     shipment_amounts[start..start + length - 1]
   elsif sum > charge || start + length == shipment_amounts.size
@@ -23,11 +23,11 @@ def fine_subset_recursive(charge, shipment_amounts, start, length, sum)
 
     if length == 0
       while result.nil? && start < shipment_amounts.size
-        result = find_subset(charge, shipment_amounts, start, length + 1, sum + shipment_amounts[start + length])
+        result = find_subset_recursive(charge, shipment_amounts, start, length + 1, sum + shipment_amounts[start + length])
         start += 1 if result.nil?
       end
     else
-      result = find_subset(charge, shipment_amounts, start, length + 1, sum + shipment_amounts[start + length])
+      result = find_subset_recursive(charge, shipment_amounts, start, length + 1, sum + shipment_amounts[start + length])
     end
 
     result
@@ -37,7 +37,12 @@ end
 def find_subset(charge, shipment_amounts, start = 0, length = 0, sum = 0)
   return [] if charge == 0
 
-  fine_subset_recursive(charge, shipment_amounts.sort, start, length, sum)
+  shipment_amounts.permutation do |shipment_amounts_perm|
+    result = find_subset_recursive(charge, shipment_amounts_perm, start, length, sum)
+    return result unless result.nil?
+  end
+
+  nil
 end
 
 def run
@@ -76,6 +81,7 @@ if ARGV[0] == "test"
     assert_equal [3, 7, 10], find_subset(20, [3, 7, 10])
     assert_equal [3, 7, 10], find_subset(20, [1, 2, 3, 7, 10, 15])
     assert_equal [3, 7, 10], find_subset(20, [1, 2, 3, 7, 15, 10])
+    assert_equal [2, 7], find_subset(9, [1, 2, 3, 7])
 
     pass
   end
