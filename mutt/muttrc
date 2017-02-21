@@ -4,15 +4,22 @@ set imap_user = 'ryan@kinderman.net'
 set from='ryan@kinderman.net'
 set realname='Ryan Kinderman'
 set folder = imaps://imap.gmail.com/
-set spoolfile = imaps://imap.gmail.com/INBOX
-set postponed="imaps://imap.gmail.com/[Gmail]/Drafts"
-set header_cache = "~/.mutt/cache/headers"
-set message_cachedir = "~/.mutt/cache/bodies"
-set certificate_file = "~/.mutt/certificates"
+set spoolfile = +INBOX
+set record = "+[Gmail]/Sent Mail"
+set postponed="+[Gmail]/Drafts"
+set header_cache = "$HOME/.mutt.local/cache/headers"
+set message_cachedir = "$HOME/.mutt.local/cache/bodies"
+set certificate_file = "$HOME/.mutt.local/certificates"
 set smtp_url = 'smtps://ryan@kinderman.net@smtp.gmail.com:465'
 set move = no
 set imap_keepalive = 900
 #set sort = 'reverse-date'
 set sort = 'reverse-threads'
 
-source $HOME/.mutt/colors/aperiodic
+# Copy all tagged messages to the archive folde
+macro index .A ":set confirmappend=no<enter><tag-prefix-cond><save-message>=[Gmail]/All Mail<enter><sync-mailbox><enter>:set confirmappend=yes<enter>"
+
+# Copy current message to the archive folder
+macro index .a ':set confirmappend=no<enter><save-message>=[Gmail]/All Mail<enter><sync-mailbox><enter>:set confirmappend=yes<enter>' "Archive"
+
+#source $HOME/.mutt/colors/solarized
