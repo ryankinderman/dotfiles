@@ -11,6 +11,7 @@ augroup filetypedetect
   au BufRead,BufNewFile *.wsdl setfiletype xml
   au BufRead,BufNewFile *.html.mustache setfiletype html
   au BufRead,BufNewFile *.json setfiletype javascript
+  au BufRead,BufNewFile todo.txt setfiletype markdown
   au BufRead,BufNewFile *.txt setfiletype text
   au BufRead,BufNewFile Jenkinsfile setfiletype groovy
   au BufRead,BufNewFile Dockerfile.* setfiletype dockerfile
