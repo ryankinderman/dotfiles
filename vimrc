@@ -195,7 +195,13 @@ endfunction
 
 
 " Netrw
-let g:netrw_liststyle=3
+" commented out below line because it was causing netrw buffers to show as
+" modified and give warning: 'E162: No write since last change for buffer
+" \"NetrwTreeListing 1\"'. With the same config, this behavior was observed on
+" Linux using vim 8.0.1453, but not on Mac using vim 8.0.1283. So, this could
+" have something to do with the vim version, compile options, etc., but doesn't
+" seem to be an issue with the config itself.
+"let g:netrw_liststyle=3
 let g:netrw_browse_split=0
 let g:netrw_list_hide='^\..*\.swp$'
 let g:netrw_altv=1
