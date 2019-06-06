@@ -1,4 +1,5 @@
 --sort-files
+--known-types
 
 --type-set=cucumber_feature=.feature
 --type-set=sass=.sass
