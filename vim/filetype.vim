@@ -15,4 +15,5 @@ augroup filetypedetect
   au BufRead,BufNewFile *.txt setfiletype text
   au BufRead,BufNewFile Jenkinsfile setfiletype groovy
   au BufRead,BufNewFile Dockerfile.* setfiletype dockerfile
+  au BufRead,BufNewFile *.confluencewiki setfiletype confluencewiki
 augroup END
