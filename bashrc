@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 ########################################################################
 # To properly integrate with dotfiles, add this to the top of your
 # $HOME/.bashrc:
