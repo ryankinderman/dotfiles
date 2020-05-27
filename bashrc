@@ -125,3 +125,6 @@ fi
 # Source configs that must be last
 ####################################
 source $DOTFILES/bash/local.bash
+
+# Indicate that the base environment has been successfully loaded, so dependencies can check for it
+export DOTFILES_BASH_LOADED=true
