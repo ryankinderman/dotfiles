@@ -1,0 +1,48 @@
+#!/usr/bin/env -S bash -e
+
+recognized_exts=".heic\|.jpg\|.png\|.mov\|.jpeg"
+albums_path="." #/Volumes/photo
+original_album=2014
+original_album_md5s="$HOME/Downloads/photos-$original_album-static-md5s"
+apple_album=2014-apple
+apple_album_md5s="$HOME/Downloads/photos-$apple_album-static-md5s"
+
+if [[ -z "$1" ]]; then
+  # verify that our list of known image extensions is comprehensive
+  set +e
+  unrecognized_exts=$(find $albums_path/$original_album -type f | grep -iv $recognized_exts)
+  if [[ ! -z "$unrecognized_exts" ]]; then
+    echo "Files with unrecognized extensions; aborting." 2>&1
+    echo "$unrecognized_exts" 2>&1
+    exit 1
+  fi
+  set -e
+
+
+  # verify that the count of recognized files is the same between the two albums
+  original_file_counts=$(find $albums_path/$original_album -type f | grep -i $recognized_exts | wc -l)
+  apple_file_counts=$(find $albums_path/$apple_album -type f | grep -i $recognized_exts | wc -l)
+  if [[ $original_file_counts -ne $apple_file_counts ]]; then
+    echo "File count mismatch:" 2>&1
+    echo "  $original_album: $original_file_counts" 2>&1
+    echo "  $apple_album: $apple_file_counts" 2>&1
+    exit 1
+  fi
+
+  # this will produce a list of md5 hashes for each photo in the album
+  find $albums_path/$original_album -type f | grep -i $recognized_exts | xargs md5 > $original_album_md5s
+
+  set +e
+  unrecognized_exts=$(find $albums_path/$apple_album -type f | grep -iv $recognized_exts)
+  if [[ ! -z "$unrecognized_exts" ]]; then
+    echo "Files with unrecognized extensions; aborting." 2>&1
+    echo "$unrecognized_exts" 2>&1
+    exit 1
+  fi
+  set -e
+
+  find $albums_path/$apple_album -type f | grep -i $recognized_exts | xargs md5 > $apple_album_md5s
+fi
+
+cat $original_album_md5s | sed 's/^.*= //' | sort > /tmp/original_album_md5s
+cat $apple_album_md5s | sed 's/^.*= //' | sort > /tmp/apple_album_md5s
