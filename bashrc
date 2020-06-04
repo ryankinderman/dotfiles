@@ -49,6 +49,18 @@ elif [ -f /etc/bash_completion ]; then
   . /etc/bash_completion
 fi
 
+# Prevent escaping $ when tab-completing paths for the `ls` command that
+# include env vars. Without this, typing the following:
+#     $GEM_HOME/g<TAB>
+# ... results in:
+#     \$GEM_HOME/gems
+#
+# Note: This needs to be after sourcing bash completion, which sets the
+# problematic completion
+complete -r ls
+complete -D -r ls
+
+
 if [[ -s "$DOTFILES/bash/git-completion.bash" ]] ; then source "$DOTFILES/bash/git-completion.bash" ; fi
 
 platform='unknown'
@@ -100,7 +112,6 @@ if [ "$TERM" = "xterm" ] ; then
     esac
   fi
 fi
-
 
 
 ###############################
