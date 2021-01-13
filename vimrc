@@ -210,6 +210,7 @@ let g:netrw_altv=1
 " Command-T
 let g:CommandTMaxFiles=80085
 let g:CommandTMaxHeight=20
+let g:CommandTScanDotDirectories=1
 
 
 " VimClojure
