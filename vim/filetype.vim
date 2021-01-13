@@ -16,4 +16,5 @@ augroup filetypedetect
   au BufRead,BufNewFile Jenkinsfile setfiletype groovy
   au BufRead,BufNewFile Dockerfile.* setfiletype dockerfile
   au BufRead,BufNewFile *.confluencewiki setfiletype confluencewiki
+  au BufRead,BufNewFile nginx.conf setfiletype nginx
 augroup END
