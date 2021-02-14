@@ -39,9 +39,14 @@ if [ -z "${ORIGINAL_PATH+x}" ]; then
 fi
 PATH=$ORIGINAL_PATH
 
-export PATH=$HOME/bin:$DOTFILES/bin:$HOME/installs/bin:$HOME/bin/wireshark:$HOME/bin/flex/bin:/usr/local/texlive/2008/bin/universal-darwin:/opt/local/bin:/usr/local/mysql/bin:$HOME/.gem/ruby/1.8/bin:$ORIGINAL_PATH
-export MANPATH=/opt/local/man:$MANPATH
+export PATH=$HOME/bin:$DOTFILES/bin:$ORIGINAL_PATH
 export EDITOR=vim
+
+### begin
+# Define XDG variables, used by git and other tools
+# See https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html for details
+export XDG_CONFIG_HOME=$HOME/.config
+### end
 
 if [ -f /opt/local/etc/bash_completion ]; then
   . /opt/local/etc/bash_completion

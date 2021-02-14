@@ -1,0 +1,24 @@
+# Symlink to this file from $XDG_CONFIG_HOME/git/config
+
+[core]
+  pager = less -+FRSX -FRX -i
+[user]
+  name = Ryan Kinderman
+  email = ryan@kinderman.net
+[color]
+  diff = auto
+  status = auto
+  branch = auto
+[alias]
+  st = status
+  ci = commit
+  br = branch
+  co = checkout
+  df = diff
+  dfw = diff --color-words
+  log = log --format=fuller
+  lg = log -p
+  lgl = log -p --stat
+  pulr = pull --rebase
+[push]
+  default = simple
