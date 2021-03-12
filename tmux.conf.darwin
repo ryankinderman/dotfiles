@@ -1,7 +1,11 @@
 source-file $DOTFILES/tmux.conf
 source-file $DOTFILES/tmux.conf.19
 
-# Needed to use tools like pbcopy. See $DOTFILES/tmux/reattach-to-user-namespace for details.
+# Needed to use tools like pbcopy. This file won't load without the
+# `reattach-to-user-namespace` command on the path.
+#
+# You can either see $DOTFILES/tmux/reattach-to-user-namespace for details, or
+# you can run `brew install reattach-to-user-namespace`.
 set-option -g default-command "reattach-to-user-namespace -l $SHELL"
 
 bind-key Y run-shell "tmux save-buffer - | reattach-to-user-namespace pbcopy"
