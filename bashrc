@@ -62,8 +62,8 @@ fi
 #
 # Note: This needs to be after sourcing bash completion, which sets the
 # problematic completion
-complete -r ls
-complete -D -r ls
+complete -r ls ln
+complete -D -r ls ln
 
 
 if [[ -s "$DOTFILES/bash/git-completion.bash" ]] ; then source "$DOTFILES/bash/git-completion.bash" ; fi
