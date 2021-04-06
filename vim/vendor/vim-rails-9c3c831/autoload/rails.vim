@@ -4958,7 +4958,7 @@ function! rails#buffer_setup() abort
   endif
 
   call s:BufCommands()
-  call s:BufProjectionCommands()
+  "call s:BufProjectionCommands()
 
   if ft =~# '^ruby\>'
     call self.setvar('&define',self.define_pattern())
