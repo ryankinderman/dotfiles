@@ -1084,14 +1084,14 @@ function! s:BufCommands()
     command! -buffer -bar -nargs=? -complete=customlist,s:Complete_environments Rdbext  :echoerr 'Install dadbod.vim and let g:dadbod_manage_dbext = 1'
   endif
   let ext = expand("%:e")
-  if rails#buffer().name() =~# '^app/views/'
-    " TODO: complete controller names with trailing slashes here
-    "command! -buffer -bar -bang -nargs=1 -range -complete=customlist,s:controllerList Extract  :exe s:ViewExtract(<bang>0,'<mods>',<line1>,<line2>,<f-args>)
-  elseif rails#buffer().name() =~# '^app/helpers/.*\.rb$'
-    command! -buffer -bar -bang -nargs=1 -range Extract  :<line1>,<line2>call s:RubyExtract(<bang>0, '<mods>', 'app/helpers', [], s:sub(<f-args>, '_helper$|Helper$|$', '_helper'))
-  elseif rails#buffer().name() =~# '^app/\w\+/.*\.rb$'
-    command! -buffer -bar -bang -nargs=1 -range Extract  :<line1>,<line2>call s:RubyExtract(<bang>0, '<mods>', matchstr(rails#buffer().name(), '^app/\w\+/').'concerns', ['  extend ActiveSupport::Concern', ''], <f-args>)
-  endif
+  "if rails#buffer().name() =~# '^app/views/'
+  "  " TODO: complete controller names with trailing slashes here
+  "  command! -buffer -bar -bang -nargs=1 -range -complete=customlist,s:controllerList Extract  :exe s:ViewExtract(<bang>0,'<mods>',<line1>,<line2>,<f-args>)
+  "elseif rails#buffer().name() =~# '^app/helpers/.*\.rb$'
+  "  command! -buffer -bar -bang -nargs=1 -range Extract  :<line1>,<line2>call s:RubyExtract(<bang>0, '<mods>', 'app/helpers', [], s:sub(<f-args>, '_helper$|Helper$|$', '_helper'))
+  "elseif rails#buffer().name() =~# '^app/\w\+/.*\.rb$'
+  "  command! -buffer -bar -bang -nargs=1 -range Extract  :<line1>,<line2>call s:RubyExtract(<bang>0, '<mods>', matchstr(rails#buffer().name(), '^app/\w\+/').'concerns', ['  extend ActiveSupport::Concern', ''], <f-args>)
+  "endif
   if rails#buffer().name() =~# '^db/migrate/.*\.rb$'
     command! -buffer -bar                 Rinvert  :call s:Invert(<bang>0)
   endif
