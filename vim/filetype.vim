@@ -17,4 +17,5 @@ augroup filetypedetect
   au BufRead,BufNewFile Dockerfile.* setfiletype dockerfile
   au BufRead,BufNewFile *.confluencewiki setfiletype confluencewiki
   au BufRead,BufNewFile nginx.conf setfiletype nginx
+  au BufRead,BufNewFile *.tpl setfiletype gotexttmpl
 augroup END

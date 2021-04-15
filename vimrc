@@ -36,6 +36,7 @@ set ts=2          " set number of spaces for a tab to 2
 set et            " expand tabs to spaces
 set display=lastline " show as much as possible of the last line if it's too long to fit completely in the window
 set wildignore=*.class,*/tmp/*
+set nomodeline
 
 
 " For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
