@@ -20,5 +20,6 @@
   lg = log -p
   lgl = log -p --stat
   pulr = pull --rebase
+  fur = pull --rebase upstream main # fur: Fetch-Upstream-Rebase ;)
 [push]
   default = simple
