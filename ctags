@@ -1,2 +1,2 @@
---langmap=Ruby:+.rake
+--langmap=Ruby:+.rake.thor
 --langmap=Lisp:+.clj
