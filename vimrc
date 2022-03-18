@@ -210,6 +210,17 @@ let g:netrw_list_hide='^\..*\.swp$'
 let g:netrw_altv=1
 
 
+" File operations
+
+"" :Save will escape a file name that contains e.g. spaces and write it
+"" Note: This is useful because the vim :save command does not handle spaces in
+"" file names.
+function Save(bang, filename)
+  exe "save".a:bang." ". fnameescape(a:filename)
+endfu
+command -bang -nargs=* Save :call Save(<q-bang>, <q-args>)
+
+
 " Command-T
 let g:CommandTMaxFiles=80085
 let g:CommandTMaxHeight=20
