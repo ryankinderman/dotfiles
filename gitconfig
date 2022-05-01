@@ -23,3 +23,5 @@
   pulru = pull --rebase upstream
 [push]
   default = simple
+[pull]
+	rebase = true
