@@ -2,6 +2,8 @@
 
 [core]
   pager = less -+FRSX -FRX -i
+[init]
+  defaultBranch = main
 [user]
   name = Ryan Kinderman
   email = ryan@kinderman.net
