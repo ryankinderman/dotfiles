@@ -1,5 +1,4 @@
 source-file $DOTFILES/tmux.conf
-source-file $DOTFILES/tmux.conf.19
 
 # Needed to use tools like pbcopy. This file won't load without the
 # `reattach-to-user-namespace` command on the path.
