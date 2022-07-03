@@ -329,11 +329,18 @@ endif
 
 
 " Colors *********************************************************************
-if has("gui_running") || &t_Co == 256
-  colorscheme jellybeans
-else
-  set bg=dark
-end
+let g:jellybeans_overrides = {
+\ 'background': { 'ctermbg': 'none', '256ctermbg': 'none' },
+\}
+if has('termguicolors') && &termguicolors
+  let g:jellybeans_overrides['background']['guibg'] = 'none'
+endif
+
+colorscheme jellybeans
+"if has("gui_running") || &t_Co == 256
+"else
+"  set bg=dark
+"end
 function! GetColorSchemes()
   let colorschemes = {}
 
