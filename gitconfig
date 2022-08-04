@@ -1,5 +1,3 @@
-# Symlink to this file from $XDG_CONFIG_HOME/git/config
-
 [core]
   pager = less -+FRSX -FRX -i
 [init]
