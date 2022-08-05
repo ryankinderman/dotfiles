@@ -31,7 +31,11 @@ if [[ $- != *i* ]] ; then
   return
 fi
 
-PS1="\h:\u \W\$(parse_git_branch)\$ "
+SHELL_CMD=${SHELL##*/}
+
+if [[ $SHELL_CMD == "bash" ]]; then
+  PS1="\h:\u \W\$(parse_git_branch)\$ "
+fi
 
 # Prevent PATH from having duplicate entries upon re-sourcing this file
 if [ -z "${ORIGINAL_PATH+x}" ]; then
@@ -48,10 +52,12 @@ export EDITOR=vim
 export XDG_CONFIG_HOME=$HOME/.config
 ### end
 
-if [ -f /opt/local/etc/bash_completion ]; then
-  . /opt/local/etc/bash_completion
-elif [ -f /etc/bash_completion ]; then
-  . /etc/bash_completion
+if [[ $SHELL_CMD == "bash" ]]; then
+  if [ -f /opt/local/etc/bash_completion ]; then
+    . /opt/local/etc/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
 fi
 
 # Prevent escaping $ when tab-completing paths for the `ls` command that
@@ -62,11 +68,13 @@ fi
 #
 # Note: This needs to be after sourcing bash completion, which sets the
 # problematic completion
-complete -r ls ln
-complete -D -r ls ln
+if [[ $SHELL_CMD == "bash" ]]; then
+  complete -r ls ln
+  complete -D -r ls ln
+fi
 
 
-if [[ -s "$DOTFILES/bash/git-completion.bash" ]] ; then source "$DOTFILES/bash/git-completion.bash" ; fi
+if [[ $SHELL_CMD == "bash" ]] && [[ -s "$DOTFILES/bash/git-completion.bash" ]] ; then source "$DOTFILES/bash/git-completion.bash" ; fi
 
 platform='unknown'
 if [[ "${OSTYPE:0:5}" == 'linux' ]]; then
@@ -125,7 +133,7 @@ fi
 
 # Generate tmux configs that are dependent on the capabilities of the parent shell
 local_tmux_conf="$HOME/.tmux.conf.parent"
-if [ "$(tput colors)" == "256" ]; then
+if [[ "$(tput colors)" == "256" ]]; then
   cat <<EOS > $local_tmux_conf
 set-option -g default-terminal screen-256color
 EOS
@@ -133,14 +141,18 @@ else
   echo "" > $local_tmux_conf
 fi
 
-if [ "$TMUX" != "" ]; then
-  bind -x '"\C-l":clear && tmux clear-history'
+if [[ "$TMUX" != "" ]]; then
+  if [[ $SHELL_CMD == "bash" ]]; then
+    bind -x '"\C-l":clear && tmux clear-history'
+  fi
 fi
 
 ####################################
 # Source configs that must be last
 ####################################
-source $DOTFILES/bash/local.bash
+if [[ $SHELL_CMD == "bash" ]]; then
+  source $DOTFILES/bash/local.bash
+fi
 
 # Indicate that the base environment has been successfully loaded, so dependencies can check for it
 export DOTFILES_BASH_LOADED=true
