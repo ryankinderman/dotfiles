@@ -37,6 +37,7 @@ set sw=2          " set shiftwidth to 2
 set ts=2          " set number of spaces for a tab to 2
 set et            " expand tabs to spaces
 set display=lastline " show as much as possible of the last line if it's too long to fit completely in the window
+set laststatus=2
 set wildignore=*.class,*/tmp/*
 set nomodeline
 
