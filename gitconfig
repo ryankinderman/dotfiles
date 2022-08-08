@@ -1,3 +1,5 @@
+# [include] this in $HOME/.gitconfig and add any customizations there
+
 [core]
   pager = less -+FRSX -FRX -i
 [init]
