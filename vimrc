@@ -366,3 +366,11 @@ function! FListColorSchemes()
   ":<C-U>
 endfunction
 command! ListColorSchemes call FListColorSchemes()
+
+if has('python3') && $POWERLINE_ROOT != ""
+  set noshowmode " because powerline already provides this info
+
+  python3 from powerline.vim import setup as powerline_setup
+  python3 powerline_setup()
+  python3 del powerline_setup
+endif
