@@ -90,6 +90,7 @@ if [[ "$platform" == "darwin" ]]; then
 else
   alias ls='ls --color'
 fi
+alias dc="docker-compose"
 alias reload="source $HOME/.bash_profile"
 alias vim="vim -u $HOME/.vimrc" # needed so that a global vimrc file doesn't mess with config loading
 alias e='exit'
