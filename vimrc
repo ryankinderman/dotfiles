@@ -39,6 +39,7 @@ set et            " expand tabs to spaces
 set display=lastline " show as much as possible of the last line if it's too long to fit completely in the window
 set laststatus=2
 set wildignore=*.class,*/tmp/*
+set switchbuf=uselast " this is the default, but need to configure here explicitly because command-t sets it to something else if its not set
 set nomodeline
 
 
