@@ -1,6 +1,8 @@
 --sort-files
 --known-types
 
+--ignore-file=is:Session.vim
+
 --type-set=cucumber_feature=.feature
 --type-set=sass=.sass
 --type-set=haml=.haml
