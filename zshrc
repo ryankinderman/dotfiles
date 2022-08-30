@@ -15,3 +15,5 @@ if [[ -n $POWERLINE_ROOT ]]; then
   powerline-daemon -q
   source $POWERLINE_ROOT/bindings/zsh/powerline.zsh
 fi
+
+setopt HIST_IGNORE_SPACE
