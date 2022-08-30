@@ -17,3 +17,5 @@ if [[ -n $POWERLINE_ROOT ]]; then
 fi
 
 setopt HIST_IGNORE_SPACE
+
+alias gwa='git worktree add'
