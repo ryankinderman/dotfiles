@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+#
+# This script provides some convenient functions for working with the MacOS keychain to manage secrets from the CLI.
+#
+# Originally from: <https://www.aria.ai/blog/posts/storing-secrets-with-keychain>
 
 KEYCHAIN="cli-secrets.keychain"
 
