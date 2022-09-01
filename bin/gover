@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+#
+# Switch to an installed version of go.
+#
+# First, run the following for the version of Go you want to use:
+#     go install golang.org/dl/go<version>@latest
+#     go<version> download
+#
+# Reference: <https://lakefs.io/managing-multiple-go-versions-with-go/>
+
+set -e
+
+usage() {
+  echo <<EOS
+usage:
+  eval $(gover <version>)
+EOS
+}
+
+if [[ -z "$GOHOME" ]]; then
+  echo "Must specify the GOHOME env var. Do so in your local shell initialization." 1>&2
+  exit 1
+fi
+
+go_version=$1
+if [[ -z "$go_version" ]]; then
+  echo "Must specify a version of Go to use." 1>&2
+  exit 1
+fi
+
+gobin="$GOHOME/bin/go$go_version"
+if [[ ! -f "$gobin" ]]; then
+  echo "Could not find go binary for specified version: $gobin" 1>&2
+  exit 1
+fi
+
+goroot="$($GOHOME/bin/go$go_version env GOROOT)"
+cat <<exports
+export GOROOT=$goroot
+export PATH=\$GOROOT/bin:\$PATH
+exports
