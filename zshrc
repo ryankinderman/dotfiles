@@ -19,3 +19,5 @@ fi
 setopt HIST_IGNORE_SPACE
 
 alias gwa='git worktree add'
+alias gwl='git worktree list'
+alias gwr='git worktree remove'
