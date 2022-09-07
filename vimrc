@@ -42,7 +42,6 @@ set wildignore=*.class,*/tmp/*
 set switchbuf=uselast " this is the default, but need to configure here explicitly because command-t sets it to something else if its not set
 set nomodeline
 
-
 " For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
 " let &guioptions = substitute(&guioptions, "t", "", "g")
 
@@ -110,38 +109,6 @@ cnoremap <C-f> <Right>
 cnoremap <C-b> <Left>
 cnoremap <Esc>b <S-Left>
 cnoremap <Esc>f <S-Right>
-
-
-" Sessions ********************************************************************
-set sessionoptions=blank,buffers,curdir,folds,help,options,resize,tabpages,winpos,winsize,globals
-
-function! AutosaveSessionOn(session_file_path)
-  augroup AutosaveSession
-    au!
-    exec "au VimLeave * mks! " . a:session_file_path
-  augroup end
-  let g:AutosaveSessionFilePath = a:session_file_path
-
-  echo "Auto-saving sessions to \"" . a:session_file_path . "\""
-endfunction
-function! AutosaveSessionOff()
-  if exists("g:AutosaveSessionFilePath")
-    unlet g:AutosaveSessionFilePath
-  endif
-
-  augroup AutosaveSession
-    au!
-  augroup end
-  augroup! AutosaveSession
-
-  echo "Auto-saving sessions is off"
-endfunction
-command! -complete=file -nargs=1 AutosaveSessionOn call AutosaveSessionOn(<f-args>)
-command! AutosaveSessionOff call AutosaveSessionOff()
-augroup AutosaveSession
-  au!
-  au SessionLoadPost * if exists("g:AutosaveSessionFilePath") != 0|call AutosaveSessionOn(g:AutosaveSessionFilePath)|endif
-augroup end
 
 
 " Text formatting ********************************************************************
