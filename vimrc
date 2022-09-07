@@ -243,6 +243,8 @@ if copy_cmd != ""
   com! -range Y call CopyToWindowManagerClipboard("range",copy_cmd,<line1>,<line2>)
 end
 
+au InsertLeave * set nopaste
+
 
 " Tab titles *****************************************************************
 " Useful examples at:
