@@ -382,3 +382,4 @@ let g:go_doc_popup_window = 1
 let g:go_def_split_same_buffer = 1
 au FileType go nmap <Leader>ds <Plug>(go-def-split)
 au FileType go nmap <Leader>dv <Plug>(go-def-vertical)
+au FileType go nmap <Leader>dt <Plug>(go-def-tab)
