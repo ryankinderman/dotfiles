@@ -32,7 +32,6 @@ set_script_path_options() {
 }
 
 main() {
-  echo "doing this"
 	set_save_bindings
 	set_restore_bindings
 	set_default_strategies
