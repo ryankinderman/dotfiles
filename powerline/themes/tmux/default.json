@@ -1,6 +1,34 @@
 {
 	"segments": {
 		"right": [
+      {
+				"function": "powerline_kubernetes.kubernetes",
+				"priority": 30,
+				"args": {
+					"show_kube_logo": true,
+					"show_cluster": true,
+					"show_namespace": false,
+					"show_default_namespace": false,
+					"alerts": [
+						"live",
+						"cluster:live"
+          ]
+        }
+      },
+      {
+				"function": "powerline_kubernetes.kubernetes",
+				"priority": 30,
+				"args": {
+					"show_kube_logo": false,
+					"show_cluster": false,
+					"show_namespace": true,
+					"show_default_namespace": false,
+					"alerts": [
+						"live",
+						"cluster:live"
+          ]
+        }
+      },
 			{
 				"function": "powerline.segments.common.sys.uptime",
 				"priority": 50
