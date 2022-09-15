@@ -177,6 +177,7 @@ endfunction
 let g:netrw_browse_split=0
 let g:netrw_list_hide='^\..*\.swp$'
 let g:netrw_altv=1
+let g:netrw_home="$HOME/.vim"
 
 
 " File operations
