@@ -1,10 +1,12 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+set -euo pipefail
+
 if [ "$#" -eq 2 ]; then
   remote=$1
   pr=$2
 
   git checkout --detach
-  git fetch $remote refs/pull/$pr/head:pr/$pr
+  git fetch --force $remote refs/pull/$pr/head:pr/$pr
   git checkout pr/$pr
 elif [ "$#" -eq 3 ]; then
   remote=$1
