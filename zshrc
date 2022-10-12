@@ -17,6 +17,8 @@ if [[ -n $POWERLINE_ROOT ]]; then
 fi
 
 setopt HIST_IGNORE_SPACE
+unsetopt SHARE_HISTORY
+setopt INC_APPEND_HISTORY
 
 alias gwa='git worktree add'
 alias gwl='git worktree list'
