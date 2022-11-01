@@ -192,7 +192,7 @@ command -bang -nargs=* Save :call Save(<q-bang>, <q-args>)
 
 
 " Command-T
-let g:CommandTMaxFiles=300000
+let g:CommandTMaxFiles=1000000
 let g:CommandTMaxHeight=20
 let g:CommandTScanDotDirectories=1
 let g:CommandTTraverseSCM='pwd'
