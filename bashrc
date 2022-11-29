@@ -37,13 +37,15 @@ if [[ $SHELL_CMD == "bash" ]]; then
   PS1="\h:\u \W\$(parse_git_branch)\$ "
 fi
 
-# Prevent PATH from having duplicate entries upon re-sourcing this file
-if [ -z "${ORIGINAL_PATH+x}" ]; then
-   export ORIGINAL_PATH=$PATH
-fi
-PATH=$ORIGINAL_PATH
+# TODO: Reconsider ORIGINAL_PATH handling, as it needs to be set before
+# anything else changes PATH and sometimes it's not.
+## Prevent PATH from having duplicate entries upon re-sourcing this file
+#if [ -z "${ORIGINAL_PATH+x}" ]; then
+#   export ORIGINAL_PATH=$PATH
+#fi
+#PATH=$ORIGINAL_PATH
 
-export PATH=$HOME/bin:$DOTFILES/bin:$ORIGINAL_PATH
+export PATH=$DOTFILES/bin:$PATH
 export EDITOR=vim
 
 ### begin
