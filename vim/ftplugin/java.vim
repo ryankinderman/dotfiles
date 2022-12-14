@@ -9,7 +9,6 @@ endif
 " This code is largely from
 " <https://github.com/neoclide/coc.nvim/tree/master#readme>
 
-let g:coc_config_home = "$DOTFILES/vim-coc-config"
 call coc#config('suggest.autoTrigger', 'trigger')
 
 function! CheckBackspace() abort

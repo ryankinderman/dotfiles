@@ -345,3 +345,5 @@ if has('python3') && $POWERLINE_ROOT != ""
   python3 powerline_setup()
   python3 del powerline_setup
 endif
+
+let g:coc_config_home = "$DOTFILES/vim-coc-config"
