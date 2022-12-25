@@ -205,11 +205,13 @@ let g:vimclojure#ParenRainbow=1
 " Copy/paste *****************************************************************
 
 let copy_cmd = ""
-if system("which pbcopy") != ""
+if system("which pbcopy") !~ "not found"
   " On a Mac with pbcopy command
   let copy_cmd = "pbcopy"
-elseif system("which xclip") != ""
+elseif system("which xclip") !~ "not found"
   let copy_cmd = "xclip -i -selection clipboard"
+elseif system("which clip.exe") !~ "not found"
+  let copy_cmd = "clip.exe"
 end
 
 if copy_cmd != ""
