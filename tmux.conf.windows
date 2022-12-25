@@ -1,0 +1,9 @@
+source-file $DOTFILES/tmux.conf
+
+# Also need to set %LOCALAPPDATA%/wsltty/home/%USERNAME%/.minttyrc:
+# ```
+# AllowSetSelection=true
+# ```
+#
+# Reference: https://github.com/mintty/wsltty/issues/21#issuecomment-271916471
+bind-key Y run-shell "tmux show-buffer | clip.exe"
