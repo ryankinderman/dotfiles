@@ -45,7 +45,12 @@ fi
 #fi
 #PATH=$ORIGINAL_PATH
 
-export PATH=$DOTFILES/bin:$PATH
+# Prevent duplicate paths
+# Reference: https://stackoverflow.com/a/13060475
+if [[ -z $TMUX ]]; then
+  export PATH=$DOTFILES/bin:$PATH
+fi
+
 export EDITOR=vim
 
 ### begin
