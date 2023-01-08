@@ -5,6 +5,6 @@ source-file $DOTFILES/tmux.conf
 #
 # You can either see $DOTFILES/tmux/reattach-to-user-namespace for details, or
 # you can run `brew install reattach-to-user-namespace`.
-set-option -g default-command "reattach-to-user-namespace -l $SHELL"
+set-option -g default-command "reattach-to-user-namespace $SHELL"
 
 bind-key Y run-shell "tmux save-buffer - | reattach-to-user-namespace pbcopy"
