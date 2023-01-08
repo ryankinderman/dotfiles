@@ -15,6 +15,10 @@
 # $HOME/.bash_profile
 #######################################################################
 
+if [ -z "${ORIGINAL_PATH+x}" ]; then
+   export ORIGINAL_PATH=$PATH
+fi
+
 # Reattach to a screen session if it's running and not already attached
 function f_rescreen {
   if [ "$(screen -ls | grep Attached)" == "" ]; then

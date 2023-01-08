@@ -43,7 +43,7 @@ fi
 #if [ -z "${ORIGINAL_PATH+x}" ]; then
 #   export ORIGINAL_PATH=$PATH
 #fi
-#PATH=$ORIGINAL_PATH
+PATH=$ORIGINAL_PATH
 
 # Prevent duplicate paths
 # Reference: https://stackoverflow.com/a/13060475
