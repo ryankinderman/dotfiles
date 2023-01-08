@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+#
+# Source this file before `$DOTFILES/zshrc` or `$DOTFILES/bashrc` in your local
+# shell init file (`.zshrc` or `.bashrc`). This makes it possible to prepend items
+# to `PATH` in a local shell init file before sourcing the `$DOTFILES` init file,
+# which prepends `$DOTFILES/bin` to the path, so that the items added from your
+# local shell init file take precedence over the system-wide PATH but not over
+# `$DOTFILES` paths. For example, if `PATH` starts as `/base/system/paths`:
+#
+#         source $DOTFILES/pathrc
+#         export PATH=/my/local/system/path:$PATH
+#         source $DOTFILES/zshrc
+#
+# This will yield:
+#         PATH=/path/to/dotfiles/bin:/my/local/system/path:/base/system/paths
+#
+# This is useful since `/path/to/dotfiles/bin` is intended to take precedence
+# over any system paths, either base or local. This has has been used e.g. when
+# using Homebrew, to place the homebrew `bin` dir ahead of system paths to
+# override system-installed commands with homebrew versions of the same name,
+# but still allow those commands to be further-overridden/wrapped by
+# `$DOTFILES/bin`.
+
+# Prevent PATH from having duplicate entries upon re-sourcing this file
+if [ -z "${ORIGINAL_PATH+x}" ]; then
+  echo "Warning: ORIGINAL_PATH is unset. You may need to source \$DOTFILES/bash_profile if using bash, or \$DOTFILES/zprofile if using zsh." 1>&2
+fi
+PATH=$ORIGINAL_PATH
+
+export DOTFILES_PATHS_SOURCED=true

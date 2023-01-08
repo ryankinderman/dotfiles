@@ -37,13 +37,9 @@ if [[ $SHELL_CMD == "bash" ]]; then
   PS1="\h:\u \W\$(parse_git_branch)\$ "
 fi
 
-# TODO: Reconsider ORIGINAL_PATH handling, as it needs to be set before
-# anything else changes PATH and sometimes it's not.
-## Prevent PATH from having duplicate entries upon re-sourcing this file
-#if [ -z "${ORIGINAL_PATH+x}" ]; then
-#   export ORIGINAL_PATH=$PATH
-#fi
-PATH=$ORIGINAL_PATH
+if [ -z "${DOTFILES_PATHS_SOURCED}" ]; then
+  echo "Warning: \$DOTFILES/pathrc not sourced. Source this file from your non-login shell init file, e.g. \$HOME/.bashrc or \$HOME/.zshrc." 1>&2
+fi
 
 export PATH=$DOTFILES/bin:$PATH
 
