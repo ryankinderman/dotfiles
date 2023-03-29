@@ -1,10 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ -z "$PROJECTS_ROOT" ]]; then
-  echo "Env var PROJECTS_ROOT undefined" 1>&2
-  exit 1
-fi
+[[ ! -z $PROJECTS_ROOT ]]
 
 story=$1
 pr=${2:-}
@@ -17,4 +14,9 @@ fi
 worktree_dir="$PROJECTS_ROOT/stories/$(basename $PWD)/$story"
 
 git worktree add $worktree_dir -b $branch
+cd $worktree_dir
+if [[ ! -z "$pr" ]]; then
+  git pr upstream $pr
+fi
+
 echo $worktree_dir
