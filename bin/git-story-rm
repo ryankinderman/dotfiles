@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+[[ ! -z $PROJECTS_ROOT ]]
+
+if [[ ${#@} -eq 0 ]]; then
+  primary_clone=$(basename $(dirname $PWD))
+else
+  primary_clone=$1
+fi
+
+branch=$(git branch --show-current)
+
+git worktree remove .
+cd $PROJECTS_ROOT/$primary_clone
+git branch -D $branch

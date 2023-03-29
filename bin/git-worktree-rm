@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-
-primary_clone=$1
-branch=$(git branch --show-current)
-
-git worktree remove .
-cd $primary_clone
-git branch -D $branch
