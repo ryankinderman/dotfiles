@@ -3,3 +3,4 @@ setlocal shiftwidth=4
 setlocal smarttab
 setlocal autoindent
 setlocal expandtab
+setlocal foldmethod=indent
