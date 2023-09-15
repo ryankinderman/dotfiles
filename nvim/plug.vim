@@ -9,6 +9,8 @@ Plug 'rose-pine/neovim'
 
 Plug 'tpope/vim-fugitive'
 
+Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
+
 " Initialize plugin system
 " - Automatically executes `filetype plugin indent on` and `syntax enable`.
 call plug#end()
