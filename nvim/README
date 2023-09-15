@@ -1,0 +1,6 @@
+To configure NeoVim, just create a `$HOME/.config/nvim/init.vim` file with the following:
+```
+source $DOTFILES/nvim/init.vim
+```
+
+This will bootstrap NeoVim.

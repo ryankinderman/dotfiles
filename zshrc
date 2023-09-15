@@ -1,5 +1,7 @@
 source $DOTFILES/bashrc
 
+export LUA_PATH="?;?.lua;$DOTFILES/nvim/?.lua;$DOTFILES/nvim/lua/?.lua;$DOTFILES/nvim/lua/?/?.lua"
+
 bindkey "^P" up-line-or-search
 bindkey "^N" down-line-or-search
 
