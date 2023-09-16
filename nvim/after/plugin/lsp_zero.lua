@@ -1,4 +1,4 @@
-local lsp = require('lsp-zero').preset({})
+local lsp_zero = require('lsp-zero').preset({})
 
 local cmp = require('cmp')
 cmp.setup({
@@ -10,19 +10,15 @@ cmp.setup({
   })
 })
 
-lsp.on_attach(function(client, bufnr)
+lsp_zero.on_attach(function(client, bufnr)
   -- see :help lsp-zero-keybindings to learn the available actions
-  lsp.default_keymaps({buffer = bufnr})
+  lsp_zero.default_keymaps({buffer = bufnr})
 
   --local opts = {buffer = bufnr, remap = false}
 
   --vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
 end)
 
--- (Optional) Configure lua language server for neovim
-local lspconfig = require('lspconfig')
-lspconfig.lua_ls.setup(lsp.nvim_lua_ls())
-lspconfig.jdtls.setup({})
 require('lspconfig.ui.windows').default_options.border = 'single'
 
-lsp.setup()
+lsp_zero.setup()
