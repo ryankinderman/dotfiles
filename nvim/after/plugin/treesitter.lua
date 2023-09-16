@@ -1,8 +1,9 @@
 require('nvim-treesitter.configs').setup {
   -- A list of parser names, or "all" (the five listed parsers should always be installed)
   ensure_installed = {
-	  "c", "lua", "javascript", "typescript", "ruby", "vim", "vimdoc",
-	  "query", "ruby", "python", "java", "clojure", "css", "go", "html"
+    "c", "lua", "javascript", "typescript", "ruby", "vim", "vimdoc",
+    "query", "ruby", "python", "java", "clojure", "css", "go", "html",
+    "markdown", "markdown_inline"
   },
 
   -- Install parsers synchronously (only applied to `ensure_installed`)
@@ -22,3 +23,10 @@ require('nvim-treesitter.configs').setup {
     additional_vim_regex_highlighting = false,
   },
 }
+
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+vim.api.nvim_create_autocmd({"BufReadPost,FileReadPost"}, {
+  pattern = "*",
+  command = "normal zR",
+})
