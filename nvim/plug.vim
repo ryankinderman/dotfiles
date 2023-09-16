@@ -26,6 +26,12 @@ Plug 'L3MON4D3/LuaSnip'     " Required
 
 Plug 'VonHeikemen/lsp-zero.nvim', {'branch': 'v3.x'}
 
+" Syntax support
+
+" NOTE: using this for :Toc and other commands; using treesitter for syntax
+" highlighting and folding
+Plug 'preservim/vim-markdown' 
+
 " Initialize plugin system
 " - Automatically executes `filetype plugin indent on` and `syntax enable`.
 call plug#end()
