@@ -32,6 +32,9 @@ Plug 'VonHeikemen/lsp-zero.nvim', {'branch': 'v3.x'}
 " highlighting and folding
 Plug 'preservim/vim-markdown' 
 
+" Tools
+Plug 'mileszs/ack.vim'
+
 " Initialize plugin system
 " - Automatically executes `filetype plugin indent on` and `syntax enable`.
 call plug#end()

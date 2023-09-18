@@ -28,5 +28,6 @@ vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 vim.api.nvim_create_autocmd({"BufReadPost,FileReadPost"}, {
   pattern = "*",
-  command = "normal zR",
+  -- NOTE: the 'zx' is to work around some bug in telescope: <https://github.com/nvim-telescope/telescope.nvim/issues/699>
+  command = "normal zx zR",
 })
