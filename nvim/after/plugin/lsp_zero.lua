@@ -13,6 +13,7 @@ cmp.setup({
         if cmp.visible() then
           cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
         else
+          -- fallback to normal vim completion
           fallback()
         end
       end,
@@ -26,13 +27,6 @@ cmp.setup({
         end
       end,
       }),
-  }),
-
-  sources = cmp.config.sources({
-    { name = 'nvim_lsp' },
-  }, {
-    -- use buffer completion if no lsp
-    { name = 'buffer' },
   }),
 })
 
