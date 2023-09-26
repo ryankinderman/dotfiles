@@ -38,5 +38,3 @@ lsp_zero.on_attach(function(client, bufnr)
 
   --vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
 end)
-
-require('lspconfig.ui.windows').default_options.border = 'single'
