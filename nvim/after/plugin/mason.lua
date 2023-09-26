@@ -16,7 +16,7 @@ require("mason-lspconfig").setup_handlers {
       )
     end,
 
-    ["jdtls"] = function ()
-      require('lspconfig').jdtls.setup({})
-    end,
+    --["jdtls"] = function ()
+    --  require('lspconfig').jdtls.setup({})
+    --end,
 }
