@@ -11,7 +11,8 @@ set si
 
 set nobackup
 set nowritebackup
-set noswapfile
+set swapfile
+set directory=$HOME/.vim/swapfiles//
 
 set ruler
 set incsearch
