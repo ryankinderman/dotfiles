@@ -15,4 +15,8 @@ require("mason-lspconfig").setup_handlers {
         require('lsp-zero').nvim_lua_ls()
       )
     end,
+
+    ["gopls"] = function ()
+      require('lspconfig').gopls.setup({})
+    end,
 }
