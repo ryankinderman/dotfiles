@@ -2,7 +2,6 @@ vim.bo.shiftwidth = 4
 vim.bo.tabstop = 4
 vim.bo.softtabstop = 4
 vim.bo.expandtab = true
-vim.bo.cindent = false
 
 local project_name = string.gsub(string.sub(vim.fn.getcwd(), 2, -1), "/", "--")
 local util = require 'lspconfig.util'
