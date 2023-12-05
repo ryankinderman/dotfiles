@@ -3,7 +3,7 @@ require('nvim-treesitter.configs').setup {
   ensure_installed = {
     "c", "lua", "javascript", "typescript", "ruby", "vim", "vimdoc",
     "query", "ruby", "python", "java", "clojure", "css", "go", "html",
-    "markdown_inline",
+    "markdown_inline", "sql",
   },
 
   -- Install parsers synchronously (only applied to `ensure_installed`)
