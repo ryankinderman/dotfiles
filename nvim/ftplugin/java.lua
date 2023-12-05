@@ -24,6 +24,16 @@ local config = {
     '-data', util.path.join(get_cache_dir(), workspace_dir),
   },
   --root_dir = vim.fs.dirname(vim.fs.find({'gradlew', '.git', 'mvnw'}, { upward = true })[1]),
+  settings = {
+    java = {
+      format = {
+        settings = {
+          url = util.path.join(
+            os.getenv('DOTFILES'), 'eclipse-java-formatter.xml'),
+        },
+      },
+    },
+  },
 }
 
 local jdtls = require('jdtls')
