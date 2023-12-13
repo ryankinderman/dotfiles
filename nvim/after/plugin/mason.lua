@@ -19,4 +19,20 @@ require("mason-lspconfig").setup_handlers {
     ["gopls"] = function ()
       require('lspconfig').gopls.setup({})
     end,
+
+    ["pyright"] = function ()
+      require('lspconfig').pyright.setup({
+        settings = {
+          python = {
+            analysis = {
+              typeCheckingMode = "off"
+            }
+          }
+        }
+      })
+    end,
+
+    ["tsserver"] = function ()
+      require('lspconfig').tsserver.setup({})
+    end,
 }
