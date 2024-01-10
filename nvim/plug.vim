@@ -3,7 +3,7 @@
 call plug#begin()
 
 Plug 'nvim-lua/plenary.nvim' " depended on by telescope
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.3' }
+Plug 'nvim-telescope/telescope.nvim'
 
 Plug 'rose-pine/neovim'
 
