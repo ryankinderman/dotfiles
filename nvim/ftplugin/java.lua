@@ -20,6 +20,7 @@ end
 local config = {
   cmd = {
     'jdtls',
+    '--jvm-arg=-javaagent:' .. os.getenv('HOME') .. '/.local/share/nvim/mason/share/jdtls/lombok.jar',
     '-configuration', util.path.join(get_cache_dir(), 'jdtls-config'),
     '-data', util.path.join(get_cache_dir(), workspace_dir),
   },
