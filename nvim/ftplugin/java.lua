@@ -30,7 +30,7 @@ local config = {
       format = {
         settings = {
           url = util.path.join(
-            os.getenv('DOTFILES'), 'eclipse-java-formatter.xml'),
+            os.getenv('DOTFILES'), 'eclipse-java-google-style.xml'),
         },
       },
     },
