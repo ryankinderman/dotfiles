@@ -57,7 +57,7 @@ fi
 
 export PATH=$DOTFILES/bin:$PATH
 
-export EDITOR=vim
+export EDITOR=nvim
 
 ### begin
 # Define XDG variables, used by git and other tools
