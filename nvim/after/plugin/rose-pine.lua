@@ -3,7 +3,9 @@ require('rose-pine').setup(
   dim_inactive_windows = true,
 
   highlight_groups = {
-    Folded = { fg = 'subtle' }
+    Normal = { bg = 'none' },
+    Folded = { fg = 'subtle' },
+    Search = { bg = 'highlight_med', inherit = false },
   },
 })
 
