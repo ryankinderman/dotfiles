@@ -35,4 +35,8 @@ require("mason-lspconfig").setup_handlers {
     ["tsserver"] = function ()
       require('lspconfig').tsserver.setup({})
     end,
+
+    ["ruby_ls"] = function ()
+      require('lspconfig').ruby_ls.setup({})
+    end,
 }
