@@ -39,4 +39,8 @@ require("mason-lspconfig").setup_handlers {
     ["ruby_ls"] = function ()
       require('lspconfig').ruby_ls.setup({})
     end,
+
+    ["gradle_ls"] = function ()
+      require('lspconfig').gradle_ls.setup({})
+    end,
 }
