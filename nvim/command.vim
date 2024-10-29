@@ -1,0 +1,1 @@
+command E :Explore
