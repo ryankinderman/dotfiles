@@ -31,7 +31,9 @@ Plug 'VonHeikemen/lsp-zero.nvim', {'branch': 'v3.x'}
 " NOTE: using this for :Toc and other commands; using treesitter for syntax
 " highlighting and folding
 Plug 'preservim/vim-markdown' 
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
 Plug 'https://github.com/apple/pkl-neovim.git'
+Plug 'lilyinstarlight/vim-spl'
 
 " Tools
 Plug 'mileszs/ack.vim'
