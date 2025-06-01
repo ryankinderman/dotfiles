@@ -25,11 +25,14 @@ require('nvim-treesitter.configs').setup {
 
   indent = {
     enable = true,
+    disable = {
+      --"markdown", -- indentation at bullet points is worse
+    },
   },
 }
 
 vim.opt.foldmethod = "expr"
-vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.api.nvim_create_autocmd({"BufReadPost", "FileReadPost"}, {
   pattern = "*",
   -- NOTE: the 'zx' is to work around some bug in telescope: <https://github.com/nvim-telescope/telescope.nvim/issues/699>
