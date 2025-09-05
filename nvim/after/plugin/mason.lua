@@ -1,6 +1,13 @@
 require("mason").setup()
 
-require("mason-lspconfig").setup()
+require("mason-lspconfig").setup({
+  automatic_enable = {
+    exclude = {
+      -- This ensures that only nvim-jdtls is used to start a jdtls server
+      "jdtls",
+    }
+  }
+})
 
 --require("mason-lspconfig").setup_handlers {
 --    -- The first entry (without a key) will be the default handler
