@@ -20,13 +20,16 @@ end
 local config = {
   cmd = {
     'jdtls',
-    '--jvm-arg=-javaagent:' .. os.getenv('HOME') .. '/.local/share/nvim/mason/share/jdtls/lombok.jar',
+    '--jvm-arg=-javaagent:' .. vim.fn.stdpath('data') .. '/mason/share/jdtls/lombok.jar',
     '-configuration', util.path.join(get_cache_dir(), 'jdtls-config'),
     '-data', util.path.join(get_cache_dir(), workspace_dir),
   },
-  --root_dir = vim.fs.dirname(vim.fs.find({'gradlew', '.git', 'mvnw'}, { upward = true })[1]),
+  root_dir = vim.fs.dirname(vim.fs.find({'gradlew', '.git', 'mvnw'}, { upward = true })[1]),
   settings = {
     java = {
+      configuration = {
+        runtimes = vim.g.java_runtimes or {}
+      },
       format = {
         settings = {
           url = util.path.join(
