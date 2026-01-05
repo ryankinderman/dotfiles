@@ -24,7 +24,8 @@ local config = {
     '-configuration', util.path.join(get_cache_dir(), 'jdtls-config'),
     '-data', util.path.join(get_cache_dir(), workspace_dir),
   },
-  root_dir = vim.fs.dirname(vim.fs.find({'gradlew', '.git', 'mvnw'}, { upward = true })[1]),
+  --root_dir = vim.fs.dirname(vim.fs.find({'gradlew', '.git', 'mvnw'}, { upward = true })[1]),
+  root_dir = vim.fn.getcwd(),
   settings = {
     java = {
       configuration = {
