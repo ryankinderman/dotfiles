@@ -8,6 +8,7 @@ Plug 'nvim-telescope/telescope.nvim'
 Plug 'rose-pine/neovim'
 
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-obsession'
 
 Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
