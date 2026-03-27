@@ -13,4 +13,18 @@ branch=$(git branch --show-current)
 
 git worktree remove .
 cd $PROJECTS_ROOT/$primary_clone
+
+for remote in origin upstream; do
+  ref=$(git symbolic-ref refs/remotes/$remote/HEAD 2>/dev/null | sed "s|refs/remotes/$remote/||" || true)
+  if [[ "$branch" == "$ref" ]]; then
+    echo "Skipping branch deletion: '$branch' is the primary branch of '$remote'"
+    exit 0
+  fi
+done
+
+if git worktree list --porcelain | grep -qF "branch refs/heads/$branch"; then
+  echo "Skipping branch deletion: '$branch' is checked out in another worktree"
+  exit 0
+fi
+
 git branch -D $branch

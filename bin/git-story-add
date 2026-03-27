@@ -3,20 +3,65 @@ set -euo pipefail
 
 [[ ! -z $PROJECTS_ROOT ]]
 
-story=$1
-pr=${2:-}
-branch=$story
+usage() {
+  echo "Usage: git story-add <story> [-p <pr>] [-b <branch>] [-c <commit>] [-f]" >&2
+  echo "" >&2
+  echo "Arguments:" >&2
+  echo "  story         Name of the story; used as the worktree directory and default branch name" >&2
+  echo "  -p <pr>       PR number to fetch via 'git pr upstream'; sets branch to 'pr/<pr>' by default" >&2
+  echo "  -b <branch>   Branch name to use; overrides the default derived from -p or story" >&2
+  echo "  -c <commit>   Commit to reset the worktree branch to after creation; mutually exclusive with -p" >&2
+  echo "                If specified without -b, branch defaults to this value" >&2
+  echo "  -f            Fetch upstream before resetting to commit (only applies with -c)" >&2
+}
 
-if [[ ! -z "$pr" ]]; then
-  branch="pr/$pr"
+pr=
+branch=
+commit=
+fetch=
+
+[[ $# -lt 1 ]] && { usage; exit 1; }
+story=$1
+shift
+
+while getopts "p:b:c:fh" opt; do
+  case $opt in
+    p) pr=$OPTARG ;;
+    b) branch=$OPTARG ;;
+    c) commit=$OPTARG ;;
+    f) fetch=1 ;;
+    h) usage; exit 0 ;;
+    *) usage; exit 1 ;;
+  esac
+done
+
+if [[ ! -z "$pr" && ! -z "$commit" ]]; then
+  echo "error: -p and -c are mutually exclusive" >&2
+  exit 1
+fi
+
+if [[ -z "$branch" ]]; then
+  if [[ ! -z "$pr" ]]; then
+    branch="pr/$pr"
+  else
+    branch=$story
+  fi
 fi
 
 worktree_dir="$PROJECTS_ROOT/stories/$(basename $PWD)/$story"
+
+#echo '"'$branch'"'
+#echo '"'$commit'"'
+#echo '"'$pr'"'
+#exit
 
 git worktree add $worktree_dir -b $branch
 cd $worktree_dir
 if [[ ! -z "$pr" ]]; then
   git pr upstream $pr
+elif [[ ! -z "$commit" ]]; then
+  [[ ! -z "$fetch" ]] && git fetch upstream
+  git reset --hard $commit
 fi
 
 echo $worktree_dir
