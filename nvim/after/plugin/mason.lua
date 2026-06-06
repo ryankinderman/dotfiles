@@ -6,9 +6,9 @@ require("mason-lspconfig").setup({
       -- This ensures that only nvim-jdtls is used to start a jdtls server
       "jdtls",
     }
-  }
+  },
 
-  handlers =  {
+  handlers = {
     -- The first entry (without a key) will be the default handler
     -- and will be called for each installed server that doesn't have
     -- a dedicated handler.
