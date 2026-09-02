@@ -23,10 +23,6 @@ cmp.setup({
   }),
   sources = cmp.config.sources({
     { name = 'nvim_lsp' },
-    {
-      name = 'lazydev',
-      group_index = 0,
-    },
   }, {
     { name = 'buffer' }
   })

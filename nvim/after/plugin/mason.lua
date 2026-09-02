@@ -17,9 +17,7 @@ require("mason-lspconfig").setup({
     --end,
     -- Next, you can provide a dedicated handler for specific servers.
     ["lua_ls"] = function ()
-      require('lspconfig').lua_ls.setup(
-        require('lsp-zero').nvim_lua_ls()
-      )
+      require('lspconfig').lua_ls.setup({})
     end,
 
     ["gopls"] = function ()

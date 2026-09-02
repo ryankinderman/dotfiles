@@ -23,7 +23,6 @@ Plug 'mfussenegger/nvim-jdtls'
 " Autocompletion
 Plug 'hrsh7th/nvim-cmp'     " Required
 Plug 'hrsh7th/cmp-nvim-lsp' " Required
-Plug 'L3MON4D3/LuaSnip'     " Required
 
 " Syntax support
 
