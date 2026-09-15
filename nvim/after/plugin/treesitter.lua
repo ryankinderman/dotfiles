@@ -1,35 +1,24 @@
-require('nvim-treesitter.configs').setup {
-  -- A list of parser names, or "all" (the five listed parsers should always be installed)
-  ensure_installed = {
-    "c", "lua", "javascript", "typescript", "ruby", "vim", "vimdoc",
-    "query", "ruby", "python", "java", "clojure", "css", "go", "html",
-    "markdown_inline", "sql", "pkl",
-  },
-
-  -- Install parsers synchronously (only applied to `ensure_installed`)
-  sync_install = false,
-
-  -- Automatically install missing parsers when entering buffer
-  -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
-  auto_install = true,
-
-  highlight = {
-    enable = true,
-
-    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-    -- Instead of true it can also be a list of languages
-    additional_vim_regex_highlighting = false,
-  },
-
-  indent = {
-    enable = true,
-    disable = {
-      --"markdown", -- indentation at bullet points is worse
-    },
-  },
+require('nvim-treesitter').install {
+  "c", "lua", "javascript", "typescript", "ruby", "vim", "vimdoc",
+  "query", "python", "java", "clojure", "css", "go", "html",
+  "markdown_inline", "sql", "pkl",
 }
+
+-- Highlighting and indentation are no longer set up via `setup{}` on the
+-- new `main` branch; they must be started per-buffer.
+-- markdown is excluded: vim-markdown's own indent/markdown.vim (GetMarkdownIndent)
+-- handles list continuation, and would otherwise get clobbered here.
+local skip_indentexpr_ft = { markdown = true }
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = '*',
+  callback = function(args)
+    local ok = pcall(vim.treesitter.start)
+    if ok and not skip_indentexpr_ft[args.match] then
+      vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    end
+  end,
+})
 
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
