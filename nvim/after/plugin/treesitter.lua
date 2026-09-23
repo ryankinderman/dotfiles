@@ -1,7 +1,7 @@
 require('nvim-treesitter').install {
   "c", "lua", "javascript", "typescript", "ruby", "vim", "vimdoc",
   "query", "python", "java", "clojure", "css", "go", "html",
-  "markdown_inline", "sql", "pkl",
+  "markdown_inline", "sql", "pkl", "yaml",
 }
 
 -- Highlighting and indentation are no longer set up via `setup{}` on the
