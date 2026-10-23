@@ -7,45 +7,30 @@ require("mason-lspconfig").setup({
       "jdtls",
     }
   },
+})
 
-  handlers = {
-    -- The first entry (without a key) will be the default handler
-    -- and will be called for each installed server that doesn't have
-    -- a dedicated handler.
-    --function (server_name) -- default handler (optional)
-    --    require("lspconfig")[server_name].setup {}
-    --end,
-    -- Next, you can provide a dedicated handler for specific servers.
-    ["lua_ls"] = function ()
-      require('lspconfig').lua_ls.setup({})
-    end,
-
-    ["gopls"] = function ()
-      require('lspconfig').gopls.setup({})
-    end,
-
-    ["pyright"] = function ()
-      require('lspconfig').pyright.setup({
-        settings = {
-          python = {
-            analysis = {
-              typeCheckingMode = "off"
-            }
-          }
-        }
-      })
-    end,
-
-    ["tsserver"] = function ()
-      require('lspconfig').tsserver.setup({})
-    end,
-
-    ["ruby_ls"] = function ()
-      require('lspconfig').ruby_ls.setup({})
-    end,
-
-    ["gradle_ls"] = function ()
-      require('lspconfig').gradle_ls.setup({})
-    end,
+-- Per-server overrides live here, after mason-lspconfig's setup(), because
+-- setup() applies its own vim.lsp.config() for some servers (e.g. gradle_ls)
+-- and later calls win. Keeping them in this file avoids depending on the
+-- load order of after/plugin/*.lua.
+vim.lsp.config("pyright", {
+  settings = {
+    python = {
+      analysis = {
+        typeCheckingMode = "off"
+      }
+    }
   }
+})
+
+-- mason-lspconfig sets gradle_ls's cmd to Mason's `gradle-language-server`
+-- launcher while it is being set up (above). As of vscode-gradle 3.17.3 that
+-- launcher no longer works: the server has no Main-Class manifest entry and
+-- talks over a Unix socket instead of stdio. Override it afterwards (later
+-- vim.lsp.config() calls win) with a wrapper that bridges the socket to stdio.
+vim.lsp.config("gradle_ls", {
+  cmd = {
+    vim.api.nvim_get_runtime_file("bin/gradle-language-server-stdio", false)[1],
+    vim.fn.stdpath("data") .. "/mason/packages/gradle-language-server/extension/lib",
+  },
 })

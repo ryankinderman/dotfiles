@@ -1,0 +1,92 @@
+#!/usr/bin/env python3
+"""Run the vscode-gradle language server (>= 3.17) over stdio.
+
+Since vscode-gradle 3.17.3 the server no longer speaks LSP on stdin/stdout.
+Instead it takes a Unix domain socket path as its first argument and connects
+to it as a *client* (see NamedPipeStream.java in microsoft/vscode-gradle).
+Neovim can only spawn a server and talk to it over stdio, so this script:
+
+  1. listens on a private Unix domain socket,
+  2. starts the language server pointing at that socket,
+  3. bridges the connection to its own stdin/stdout.
+
+Usage: gradle-language-server-stdio <path to the extension's lib/ directory>
+"""
+import os
+import shutil
+import socket
+import subprocess
+import sys
+import tempfile
+import threading
+
+STARTUP_TIMEOUT_SECONDS = 60
+MAIN_CLASS = "com.microsoft.gradle.GradleLanguageServer"
+
+
+def pump_socket_to_stdout(conn):
+    try:
+        while True:
+            data = conn.recv(65536)
+            if not data:
+                return
+            view = memoryview(data)
+            while view:
+                view = view[os.write(1, view):]
+    except OSError:
+        pass
+
+
+def accept_from(listener, server):
+    """Wait for the server to connect, giving up if it exits or takes too long."""
+    listener.settimeout(1)
+    for _ in range(STARTUP_TIMEOUT_SECONDS):
+        try:
+            return listener.accept()[0]
+        except socket.timeout:
+            if server.poll() is not None:
+                sys.exit(f"language server exited with status {server.returncode} before connecting")
+    sys.exit("timed out waiting for the language server to connect")
+
+
+def main():
+    if len(sys.argv) != 2:
+        sys.exit(__doc__)
+    lib_dir = sys.argv[1]
+
+    # Unix socket paths are limited to ~104 bytes on macOS, and $TMPDIR is
+    # long there, so use /tmp explicitly.
+    sock_dir = tempfile.mkdtemp(prefix="gradlels-", dir="/tmp")
+    server = None
+    try:
+        sock_path = os.path.join(sock_dir, "s")
+        listener = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        listener.bind(sock_path)
+        listener.listen(1)
+
+        server = subprocess.Popen(
+            ["java", "-cp", os.path.join(lib_dir, "*"), MAIN_CLASS, sock_path],
+            stdin=subprocess.DEVNULL,
+            stdout=sys.stderr,  # our stdout is the LSP channel; keep the JVM off it
+            stderr=sys.stderr,
+        )
+        conn = accept_from(listener, server)
+        conn.settimeout(None)
+        threading.Thread(target=pump_socket_to_stdout, args=(conn,), daemon=True).start()
+        while True:
+            data = os.read(0, 65536)
+            if not data:
+                break
+            conn.sendall(data)
+    finally:
+        if server is not None:
+            server.terminate()
+            try:
+                server.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                server.kill()
+        shutil.rmtree(sock_dir, ignore_errors=True)
+
+
+if __name__ == "__main__":
+    main()
