@@ -20,6 +20,9 @@ end
 local config = {
   cmd = {
     'jdtls',
+    -- jdtls >= 1.63 bundles Eclipse platform plugins that require Java 25 to run. This only
+    -- selects the JVM jdtls itself runs on; the project runtimes are configured separately below.
+    '--java-executable', vim.fn.trim(vim.fn.system('/usr/libexec/java_home -v 25')) .. '/bin/java',
     '--jvm-arg=-javaagent:' .. vim.fn.stdpath('data') .. '/mason/share/jdtls/lombok.jar',
     '-configuration', util.path.join(get_cache_dir(), 'jdtls-config'),
     '-data', util.path.join(get_cache_dir(), workspace_dir),
